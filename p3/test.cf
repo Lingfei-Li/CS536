@@ -4,6 +4,7 @@ struct s {
     int sa;
     bool sb;
     void sc;
+    stuct id id;
 };
 
 
@@ -28,11 +29,22 @@ void func1(int param_a, bool param_b, void param_c) {
     if (a) {
 
     }
-        
+    while(true){
+        if(a){
+        } else{
+            if(b){}
+        }
+    }
     
     // expressions
-    a = a;          //assign
-    a = 1;      //term
+    a = a;       //assign
+    a = 1;       //term
+    a = "";      //stringlit
+    a = (4);     //paren
+    a = true;    //true
+    a = false;   //false
+    a = a.b;     //loc
+    
 
     // associativity
     a = a + b + c;
@@ -50,13 +62,24 @@ void func1(int param_a, bool param_b, void param_c) {
     a = a + b * c;
     a = a * -c;
     a = a * -c.d;
+    a = a == a && !d || b;
+    a = (a == a) && (!d || b);
+    a = (a == a && !d) || b;
+    a = a <= d.c -1/3;
+
 
     // function return
     return func_a;
     return 123456;
     return "123456";
     return true;
+    return fc();
     return;
+    
+    
+    //func calls
+    b = func2(a, b) + func1();
+
 }
 
 int func2() {
@@ -64,3 +87,13 @@ int a;
 
 }
 
+int a;
+bool b;
+void c;
+
+struct s {
+    int sa;
+    bool sb;
+    void sc;
+    stuct id id;
+};
