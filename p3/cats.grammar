@@ -1,0 +1,134 @@
+/**********************************************************************
+ Grammar for cats programs
+ **********************************************************************/
+//ok
+program         ::= declList
+                ;
+
+//ok
+declList        ::= declList decl
+                | /* epsilon */
+                ;
+
+//ok
+decl            ::= varDecl 
+                | fnDecl    
+                | structDecl     // struct definitions only at top level
+                ;
+
+//ok
+varDeclList     ::= varDeclList varDecl
+                | /* epsilon */
+                ;
+
+//ok
+varDecl         ::= type id SEMICOLON
+                | STRUCT id id SEMICOLON
+                ;
+
+//ok
+fnDecl          ::= type id formals fnBody
+                ;
+                
+//ok
+structDecl      ::= STRUCT id LCURLY structBody RCURLY SEMICOLON
+                ;
+                
+//ok
+structBody      ::= structBody varDecl
+                | varDecl
+                ;
+                
+//ok
+formals         ::= LPAREN RPAREN
+                | LPAREN formalsList RPAREN
+                ;
+
+//ok
+formalsList     ::= formalDecl
+                | formalDecl COMMA formalsList
+                ;
+
+//ok
+formalDecl      ::= type id        // note: no struct parameters
+                ;
+
+//ok
+fnBody          ::= LCURLY varDeclList stmtList RCURLY
+                ;
+
+//ok
+stmtList        ::= stmtList stmt
+                | /* epsilon */
+                ;
+
+//ok
+stmt            ::= assignExp SEMICOLON
+                | loc PLUSPLUS SEMICOLON
+                | loc MINUSMINUS SEMICOLON
+                | CIN READ loc SEMICOLON
+                | COUT WRITE exp SEMICOLON
+                | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+                | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY
+                | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
+                | RETURN exp SEMICOLON
+                | RETURN SEMICOLON
+                | fncall SEMICOLON
+                ;
+//ok
+assignExp       ::= loc ASSIGN exp
+                ;
+                
+//ok
+exp             ::= assignExp
+                | exp PLUS exp
+                | exp MINUS exp
+                | exp TIMES exp
+                | exp DIVIDE exp
+                | NOT exp
+                | exp AND exp
+                | exp OR exp
+                | exp EQUALS exp
+                | exp NOTEQUALS exp
+                | exp LESS exp
+                | exp GREATER exp
+                | exp LESSEQ exp
+                | exp GREATEREQ exp
+                | MINUS term
+                | term
+                ;
+
+//only loc
+term            ::= loc
+                | INTLITERAL
+                | STRINGLITERAL
+                | TRUE
+                | FALSE
+                | LPAREN exp RPAREN
+                | fncall
+                ;
+
+//ok
+fncall          ::=  id LPAREN RPAREN   // fn call with no args
+                | id LPAREN actualList RPAREN  // with args
+                ;
+
+//ok
+actualList      ::= exp
+                | actualList COMMA exp
+                ;
+
+//ok
+type            ::= INT
+                | BOOL
+                | VOID
+                ;
+
+//ok
+loc             ::= id
+                | loc DOT id
+
+//ok
+id              ::= ID
+                ;
+

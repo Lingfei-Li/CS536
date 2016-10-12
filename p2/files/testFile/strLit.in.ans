@@ -1,0 +1,30 @@
+STR: ""
+1,1
+STR: "a"
+3,1
+STR: "12345678901234567890"
+5,1
+STR: "this string should start from char num 24"
+5,24
+STR: "long string long string long string long string long string long string long string long string long string long string long string long string long string long string long string long string long string long string"
+7,1
+STR: "good escaped chars: \n\t\'\"\?\\"
+9,1
+STR: "string with comments? //  #  "
+11,1
+STR: "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+13,1
+STR: "0123456789 _+-.,!@#$%^&*();\\/|<>\"'"
+14,1
+STR: "12345 -98.7 3.141 .6180 9,000 +42"
+15,1
+STR: "555.123.4567    +1-(800)-555-2468"
+16,1
+STR: "foo@demo.net    bar.ba@test.com"
+17,1
+STR: "www.demo.com    http://foo.com/"
+18,1
+STR: "http://regexr.com/foo.html?q=bar"
+19,1
+STR: "https://mediatemple.net"
+20,1

@@ -1,0 +1,66 @@
+
+
+struct s {
+    int sa;
+    bool sb;
+    void sc;
+};
+
+
+int a;
+bool b;
+void c;
+struct s d;
+
+
+void func1(int param_a, bool param_b, void param_c) {
+    int fa;
+    bool fb;
+    void fc;
+    struct s fd;
+
+
+    // statements
+    a ++;
+    a.b --;
+    cin >> a;
+    cout << a.b;
+    if (a) {
+
+    }
+        
+    
+    // expressions
+    a = a;          //assign
+    a = 1;      //term
+
+    // associativity
+    a = a + b + c;
+    a = a - b - c;
+    a = a * b * c;
+    a = a / b / c;
+    a = a = b;
+    a = a.b.c;
+    
+
+    // precedence
+    a = a || b && c;
+    a = a && b < c;
+    a = a < b + c;
+    a = a + b * c;
+    a = a * -c;
+    a = a * -c.d;
+
+    // function return
+    return func_a;
+    return 123456;
+    return "123456";
+    return true;
+    return;
+}
+
+int func2() {
+int a;
+
+}
+

@@ -1,0 +1,43 @@
+struct s{
+  int sa;
+  bool sb;
+  void sc;
+};
+int a;
+bool b;
+void c;
+struct s d;
+void func1(int param_a, bool param_b, void param_c) {
+    int fa;
+    bool fb;
+    void fc;
+    struct s fd;
+    a ++;
+    (a.b) --;
+    cin>>a;
+    cout<<(a.b);
+    if (a) {
+    }
+     ( a = a);
+     ( a = 1);
+     ( a = ((a + b) + c));
+     ( a = ((a - b) - c));
+     ( a = ((a * b) * c));
+     ( a = ((a / b) / c));
+     ( a =  ( a = b));
+     ( a = ((a.b).c));
+     ( a = (a || (b && c)));
+     ( a = (a && (b < c)));
+     ( a = (a < (b + c)));
+     ( a = (a + (b * c)));
+     ( a = (a * -c));
+     ( a = (a * -(c.d)));
+    return func_a;
+    return 123456;
+    return "123456";
+    return true;
+    return;
+}
+int func2() {
+    int a;
+}
