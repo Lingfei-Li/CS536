@@ -4,7 +4,7 @@ struct s {
     int sa;
     bool sb;
     void sc;
-    stuct id id;
+    struct ss sd;    //cannot use 'id': reserved word
 };
 
 
@@ -27,6 +27,9 @@ void func1(int param_a, bool param_b, void param_c) {
     cin >> a;
     cout << a.b;
     if (a) {
+
+    }
+    else {
 
     }
     while(true){
@@ -80,6 +83,13 @@ void func1(int param_a, bool param_b, void param_c) {
     //func calls
     b = func2(a, b) + func1();
 
+    if (a) {
+
+    }
+    else {
+
+    }
+
 }
 
 int func2() {
@@ -95,5 +105,6 @@ struct s {
     int sa;
     bool sb;
     void sc;
-    stuct id id;
+    struct ss sd;
 };
+

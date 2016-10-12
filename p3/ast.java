@@ -517,9 +517,10 @@ class IfElseStmtNode extends StmtNode {
         myThenStmtList.unparse(p, indent+2);
         p.print("}\n");
         doIndent(p, indent);
-        p.print("else {");
+        p.print("else {\n");
         myElseDeclList.unparse(p, indent+2);
         myElseStmtList.unparse(p, indent+2);
+        doIndent(p, indent);
         p.print("}\n");
     }
 
@@ -730,7 +731,7 @@ class CallExpNode extends ExpNode {
         myId.unparse(p, indent);
         p.print("(");
         myExpList.unparse(p, indent);
-        p.print(");");
+        p.print(")");
     }
 
     // 2 kids
