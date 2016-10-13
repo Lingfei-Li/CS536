@@ -2,84 +2,84 @@
  Grammar for cats programs
  **********************************************************************/
 //ok
-program         ::= declList
+program         ::= declList        // test ok
                 ;
 
 //ok
-declList        ::= declList decl
-                | /* epsilon */
+declList        ::= declList decl   // test ok
+                | /* epsilon */     // test ok
                 ;
 
 //ok
-decl            ::= varDecl 
-                | fnDecl    
-                | structDecl     // struct definitions only at top level
+decl            ::= varDecl         // test ok
+                | fnDecl            // test ok
+                | structDecl     // struct definitions only at top level. test ok
                 ;
 
 //ok
-varDeclList     ::= varDeclList varDecl
-                | /* epsilon */
+varDeclList     ::= varDeclList varDecl // test ok (function body)
+                | /* epsilon */         // test ok
                 ;
 
 //ok
-varDecl         ::= type id SEMICOLON
-                | STRUCT id id SEMICOLON
+varDecl         ::= type id SEMICOLON       // test ok
+                | STRUCT id id SEMICOLON    // test ok
                 ;
 
 //ok
-fnDecl          ::= type id formals fnBody
+fnDecl          ::= type id formals fnBody  // test ok
                 ;
                 
 //ok
-structDecl      ::= STRUCT id LCURLY structBody RCURLY SEMICOLON
+structDecl      ::= STRUCT id LCURLY structBody RCURLY SEMICOLON    // test ok
                 ;
                 
 //ok
-structBody      ::= structBody varDecl
-                | varDecl
+structBody      ::= structBody varDecl          // test ok
+                | varDecl                       // test ok
                 ;
                 
 //ok
-formals         ::= LPAREN RPAREN
-                | LPAREN formalsList RPAREN
+formals         ::= LPAREN RPAREN               // test ok (func2)
+                | LPAREN formalsList RPAREN     // test ok (func1)
                 ;
 
 //ok
-formalsList     ::= formalDecl
-                | formalDecl COMMA formalsList
+formalsList     ::= formalDecl                  // test ok(func1)
+                | formalDecl COMMA formalsList  // test ok(func1)
                 ;
 
 //ok
-formalDecl      ::= type id        // note: no struct parameters
+formalDecl      ::= type id        // note: no struct parameters. test ok(func1)
                 ;
 
 //ok
-fnBody          ::= LCURLY varDeclList stmtList RCURLY
+fnBody          ::= LCURLY varDeclList stmtList RCURLY      // test ok
                 ;
 
 //ok
-stmtList        ::= stmtList stmt
-                | /* epsilon */
+stmtList        ::= stmtList stmt               // test ok
+                | /* epsilon */                 // test ok
                 ;
 
 //ok
-stmt            ::= assignExp SEMICOLON
-                | loc PLUSPLUS SEMICOLON
-                | loc MINUSMINUS SEMICOLON
-                | CIN READ loc SEMICOLON
-                | COUT WRITE exp SEMICOLON
-                | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
-                | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY
-                | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY
-                | RETURN exp SEMICOLON
-                | RETURN SEMICOLON
-                | fncall SEMICOLON
+stmt            ::= assignExp SEMICOLON         // test ok 
+                | loc PLUSPLUS SEMICOLON        // test ok 
+                | loc MINUSMINUS SEMICOLON      // test ok 
+                | CIN READ loc SEMICOLON        // test ok 
+                | COUT WRITE exp SEMICOLON      // test ok 
+                | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY   // test ok 
+                | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY   // test ok 
+                | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY    // test ok 
+                | RETURN exp SEMICOLON          // test ok 
+                | RETURN SEMICOLON              // test ok 
+                | fncall SEMICOLON              // test ok 
                 ;
 //ok
 assignExp       ::= loc ASSIGN exp
                 ;
                 
-//ok
+//ok. all test ok
 exp             ::= assignExp
                 | exp PLUS exp
                 | exp MINUS exp
@@ -98,7 +98,7 @@ exp             ::= assignExp
                 | term
                 ;
 
-//only loc
+//ok. all test ok
 term            ::= loc
                 | INTLITERAL
                 | STRINGLITERAL
@@ -108,27 +108,27 @@ term            ::= loc
                 | fncall
                 ;
 
-//ok
+//ok. all test ok
 fncall          ::=  id LPAREN RPAREN   // fn call with no args
                 | id LPAREN actualList RPAREN  // with args
                 ;
 
-//ok
-actualList      ::= exp
+//ok. all test ok
+actualList      ::= exp 
                 | actualList COMMA exp
                 ;
 
-//ok
+//ok. test ok
 type            ::= INT
                 | BOOL
                 | VOID
                 ;
 
-//ok
+//ok. test ok
 loc             ::= id
                 | loc DOT id
 
-//ok
+//ok. test ok
 id              ::= ID
                 ;
 

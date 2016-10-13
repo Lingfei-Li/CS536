@@ -40,8 +40,8 @@ ErrMsg.class: ErrMsg.java
 
 ##test
 t:
-	java P3 test.cf out.test
-	cat out.test
+	java P3 test.cf out.txt
+	cat out.txt
 
 ###
 # clean

@@ -1,0 +1,122 @@
+struct s{
+  int sa;
+  bool sb;
+  void sc;
+  struct ss sd;
+};
+int a;
+bool b;
+void c;
+struct s d;
+void func1(int param_a, bool param_b, void param_c) {
+    int fa;
+    bool fb;
+    void fc;
+    struct s fd;
+    (a = a);
+    ((a.b) = (a.c));
+    a ++;
+    (a.b) --;
+    cin>>a;
+    cout<<(a.b);
+    if(a) {
+    }
+    if(a) {
+      int a;
+      bool b;
+      void c;
+      struct s d;
+      (a = ((1 + 2) + b));
+      cin>>a;
+      cout<<a;
+      fc();
+      if(a) {
+      }
+    }
+    else {
+      int a;
+      bool b;
+      void c;
+      struct s d;
+      (a = ((1 + 2) + b));
+      cin>>a;
+      cout<<a;
+      fc();
+      if(a) {
+      }
+    }
+    if(a) {
+      int a;
+      if(a) {
+        int a;
+        if(a) {
+          int a;
+          if(a) {
+            int a;
+          }
+        }
+      }
+    }
+    while (true) {
+      int a;
+      bool b;
+      void c;
+      struct s d;
+      (a = ((1 + 2) + b));
+      cin>>a;
+      cout<<a;
+      fc();
+      if(a) {
+      }
+      else {
+        if(b) {
+        }
+      }
+    }
+    return fa;
+    return 123456;
+    return "123456";
+    return true;
+    return fc();
+    return;
+    func();
+    func(a, b);
+    (a = 1);
+    (a = "");
+    (a = 4);
+    (a = true);
+    (a = false);
+    (a = (a.b));
+    (a = fc());
+    (a = (a + a));
+    (a = (a - a));
+    (a = (a * a));
+    (a = (a / a));
+    (a = (!a));
+    (a = (a && a));
+    (a = (a || a));
+    (a = (a == a));
+    (a = (a < a));
+    (a = (a > a));
+    (a = (a <= a));
+    (a = (-a));
+    (a = ((a + b) + c));
+    (a = ((a - b) - c));
+    (a = ((a * b) * c));
+    (a = ((a / b) / c));
+    (a = (a = b));
+    (a = ((a.b).c));
+    (a = (a || (b && c)));
+    (a = (a && (b < c)));
+    (a = (a < (b + c)));
+    (a = (a + (b * c)));
+    (a = (a * (-c)));
+    (a = (a * (-(c.d))));
+    (a = (((a == a) && (!d)) || b));
+    (a = ((a == a) && ((!d) || b)));
+    (a = (((a == a) && (!d)) || b));
+    (a = (a <= ((d.c) - (1 / 3))));
+}
+int func2() {
+    int a;
+}

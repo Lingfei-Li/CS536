@@ -481,12 +481,12 @@ class IfStmtNode extends StmtNode {
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
-        p.print("if (");
+        p.print("if(");
         myExp.unparse(p, 0);
         p.print(") {\n");
-        doIndent(p, indent);
         myDeclList.unparse(p, indent+2);
         myStmtList.unparse(p, indent+2);
+        doIndent(p, indent);
         p.print("}\n");
     }
 
@@ -509,12 +509,12 @@ class IfElseStmtNode extends StmtNode {
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
-        p.print("if (");
+        p.print("if(");
         myExp.unparse(p, 0);
         p.print(") {\n");
-        doIndent(p, indent);
         myThenDeclList.unparse(p, indent+2);
         myThenStmtList.unparse(p, indent+2);
+        doIndent(p, indent);
         p.print("}\n");
         doIndent(p, indent);
         p.print("else {\n");
@@ -546,6 +546,7 @@ class WhileStmtNode extends StmtNode {
         p.print(") {\n");
         myDeclList.unparse(p, indent+2);
         myStmtList.unparse(p, indent+2);
+        doIndent(p, indent);
         p.print("}\n");
     }
 
@@ -562,8 +563,8 @@ class CallStmtNode extends StmtNode {
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
-        myCall.unparse(p, indent);
-        p.print("\n");
+        myCall.unparse(p, 0);
+        p.print(";\n");
     }
 
     // 1 kid
@@ -703,7 +704,7 @@ class AssignNode extends ExpNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
-        p.print(" ( ");
+        p.print("(");
         myLhs.unparse(p, 0);
         p.print(" = ");
         myExp.unparse(p, 0);
@@ -777,8 +778,9 @@ class UnaryMinusNode extends UnaryExpNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
-        p.print("-");
+        p.print("(-");
         myExp.unparse(p, 0);
+        p.print(")");
     }
 }
 
@@ -788,8 +790,9 @@ class NotNode extends UnaryExpNode {
     }
 
     public void unparse(PrintWriter p, int indent) {
-        p.print("!");
+        p.print("(!");
         myExp.unparse(p, 0);
+        p.print(")");
     }
 }
 
