@@ -186,8 +186,8 @@ class FnBodyNode extends ASTnode {
     }
 
     public void unparse(PrintWriter p, int indent) {
-        myDeclList.unparse(p, indent + 2);
-        myStmtList.unparse(p, indent + 2);
+        myDeclList.unparse(p, indent);
+        myStmtList.unparse(p, indent);
     }
 
     // 2 kids
@@ -292,7 +292,7 @@ class FnDeclNode extends DeclNode {
         p.print(")");
         p.print(" ");
         p.print("{\n");
-        myBody.unparse(p, indent+2);
+        myBody.unparse(p, indent+4);
         p.print("}\n");
     }
 
@@ -331,11 +331,11 @@ class StructDeclNode extends DeclNode {
         p.print("struct ");
         myId.unparse(p, 0);
         p.print("{\n");
-        myDeclList.unparse(p, indent + 2);
+        myDeclList.unparse(p, indent+4);
         p.print("};\n");    
     }
 
-    // 2 kids
+    // 4 kids
     private IdNode myId;
 	private DeclListNode myDeclList;
 }
@@ -484,8 +484,8 @@ class IfStmtNode extends StmtNode {
         p.print("if(");
         myExp.unparse(p, 0);
         p.print(") {\n");
-        myDeclList.unparse(p, indent+2);
-        myStmtList.unparse(p, indent+2);
+        myDeclList.unparse(p, indent+4);
+        myStmtList.unparse(p, indent+4);
         doIndent(p, indent);
         p.print("}\n");
     }
@@ -512,14 +512,14 @@ class IfElseStmtNode extends StmtNode {
         p.print("if(");
         myExp.unparse(p, 0);
         p.print(") {\n");
-        myThenDeclList.unparse(p, indent+2);
-        myThenStmtList.unparse(p, indent+2);
+        myThenDeclList.unparse(p, indent+4);
+        myThenStmtList.unparse(p, indent+4);
         doIndent(p, indent);
         p.print("}\n");
         doIndent(p, indent);
         p.print("else {\n");
-        myElseDeclList.unparse(p, indent+2);
-        myElseStmtList.unparse(p, indent+2);
+        myElseDeclList.unparse(p, indent+4);
+        myElseStmtList.unparse(p, indent+4);
         doIndent(p, indent);
         p.print("}\n");
     }
@@ -544,8 +544,8 @@ class WhileStmtNode extends StmtNode {
         p.print("while (");
         myExp.unparse(p, 0);
         p.print(") {\n");
-        myDeclList.unparse(p, indent+2);
-        myStmtList.unparse(p, indent+2);
+        myDeclList.unparse(p, indent+4);
+        myStmtList.unparse(p, indent+4);
         doIndent(p, indent);
         p.print("}\n");
     }

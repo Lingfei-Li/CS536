@@ -39,9 +39,8 @@ ErrMsg.class: ErrMsg.java
 	$(JC) ErrMsg.java
 
 ##test
-t:
-	java P3 test.cf out.txt
-	cat out.txt
+test:
+	java P3 test.cf test.out
 
 ###
 # clean

@@ -1,8 +1,8 @@
 struct s{
-  int sa;
-  bool sb;
-  void sc;
-  struct ss sd;
+    int sa;
+    bool sb;
+    void sc;
+    struct ss sd;
 };
 int a;
 bool b;
@@ -22,56 +22,56 @@ void func1(int param_a, bool param_b, void param_c) {
     if(a) {
     }
     if(a) {
-      int a;
-      bool b;
-      void c;
-      struct s d;
-      (a = ((1 + 2) + b));
-      cin>>a;
-      cout<<a;
-      fc();
-      if(a) {
-      }
+        int a;
+        bool b;
+        void c;
+        struct s d;
+        (a = ((1 + 2) + b));
+        cin>>a;
+        cout<<a;
+        fc();
+        if(a) {
+        }
     }
     else {
-      int a;
-      bool b;
-      void c;
-      struct s d;
-      (a = ((1 + 2) + b));
-      cin>>a;
-      cout<<a;
-      fc();
-      if(a) {
-      }
+        int a;
+        bool b;
+        void c;
+        struct s d;
+        (a = ((1 + 2) + b));
+        cin>>a;
+        cout<<a;
+        fc();
+        if(a) {
+        }
     }
     if(a) {
-      int a;
-      if(a) {
         int a;
         if(a) {
-          int a;
-          if(a) {
             int a;
-          }
+            if(a) {
+                int a;
+                if(a) {
+                    int a;
+                }
+            }
         }
-      }
     }
     while (true) {
-      int a;
-      bool b;
-      void c;
-      struct s d;
-      (a = ((1 + 2) + b));
-      cin>>a;
-      cout<<a;
-      fc();
-      if(a) {
-      }
-      else {
-        if(b) {
+        int a;
+        bool b;
+        void c;
+        struct s d;
+        (a = ((1 + 2) + b));
+        cin>>a;
+        cout<<a;
+        fc();
+        if(a) {
         }
-      }
+        else {
+            if(b) {
+            }
+        }
     }
     return fa;
     return 123456;
