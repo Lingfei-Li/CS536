@@ -9,7 +9,8 @@ import java_cup.runtime.*;
  *    2. the output file into which the AST built by the parser should be
  *       unparsed
  * The program opens the two files, creates a scanner and a parser, and
- * calls the parser.  If the parse is successful, the AST is unparsed.
+ * calls the parser.  If the parse is successful, run name analysis. 
+ * If name analysis is successful, the AST is unparsed.
  */
 
 public class P4 {
@@ -50,15 +51,14 @@ public class P4 {
 
         try {
             root = P.parse(); // do the parse
+            root = P.parse(); // do the parse
             System.out.println ("program parsed correctly.");
         } catch (Exception ex){
             System.err.println("Exception occured during parse: " + ex);
             System.exit(-1);
         }
-        ((ProgramNode)root.value).nameAnalysis();
-        if(ErrMsg.isFatal == false) {
-            ((ASTnode)root.value).unparse(outFile, 0);
-        }
+        //((ProgramNode)root.value).nameAnalysis();
+        ((ASTnode)root.value).unparse(outFile, 0);
         outFile.close();
 
         return;

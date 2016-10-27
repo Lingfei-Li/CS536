@@ -1,6 +1,6 @@
 ###
 # This Makefile can be used to make a parser for the cats language
-# (parser.class) and to make a program (P3.class) that tests the parser and
+# (parser.class) and to make a program (P4.class) that tests the parser and
 # the unparse methods in ast.java.
 #
 # make clean removes all generated files.
@@ -11,8 +11,8 @@ JC = javac -Xdiags:verbose
 CP2 = ~cs536-1/public/tools/deps_src/java-cup-11b.jar:~cs536-1/public/tools/deps_src/java-cup-11b-runtime.jar:~cs536-1/public/tools/deps:.
 CP = ~cs536-1/public/tools/deps:.
 
-P3.class: P3.java parser.class Yylex.class ASTnode.class
-	$(JC)    P3.java
+P4.class: P4.java parser.class Yylex.class ASTnode.class
+	$(JC)    P4.java
 
 parser.class: parser.java ASTnode.class Yylex.class ErrMsg.class
 	$(JC)      parser.java
@@ -39,11 +39,8 @@ ErrMsg.class: ErrMsg.java
 	$(JC) ErrMsg.java
 
 ##test
-test:
-	java P3 test.cf test.out
-
 t:
-	java P3 test.cf out.txt
+	java P4 test.cf out.txt
 
 ###
 # clean

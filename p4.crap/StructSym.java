@@ -9,18 +9,10 @@ public class StructSym extends SemSym{
         this.type = type;
     }
     
-    public StructSym(String type, HashMap<String,String> decl) {
+    public StructSym(String type, DeclListNode node) {
         super();
         this.type = type;
-        this.decl = decl;
-    }
-
-    public boolean hasField(String f) {
-        return decl.containsKey(f);
-    }
-
-    public String getFieldType(String f) {
-        return decl.get(f);
+        this.decl = node.getDeclMap();
     }
 
     public boolean isStruct() {
@@ -32,6 +24,6 @@ public class StructSym extends SemSym{
     }
     
     public String toString() {
-        return type;
+        return "struct.toString()";
     }
 }

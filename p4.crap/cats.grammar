@@ -1,0 +1,134 @@
+/**********************************************************************
+ Grammar for cats programs
+ **********************************************************************/
+//ok
+program         ::= declList        // test ok
+                ;
+
+//ok
+declList        ::= declList decl   // test ok
+                | /* epsilon */     // test ok
+                ;
+
+//ok
+decl            ::= varDecl         // test ok
+                | fnDecl            // test ok
+                | structDecl     // struct definitions only at top level. test ok
+                ;
+
+//ok
+varDeclList     ::= varDeclList varDecl // test ok (function body)
+                | /* epsilon */         // test ok
+                ;
+
+//ok
+varDecl         ::= type id SEMICOLON       // test ok
+                | STRUCT id id SEMICOLON    // test ok
+                ;
+
+//ok
+fnDecl          ::= type id formals fnBody  // test ok
+                ;
+                
+//ok
+structDecl      ::= STRUCT id LCURLY structBody RCURLY SEMICOLON    // test ok
+                ;
+                
+//ok
+structBody      ::= structBody varDecl          // test ok
+                | varDecl                       // test ok
+                ;
+                
+//ok
+formals         ::= LPAREN RPAREN               // test ok (func2)
+                | LPAREN formalsList RPAREN     // test ok (func1)
+                ;
+
+//ok
+formalsList     ::= formalDecl                  // test ok(func1)
+                | formalDecl COMMA formalsList  // test ok(func1)
+                ;
+
+//ok
+formalDecl      ::= type id        // note: no struct parameters. test ok(func1)
+                ;
+
+//ok
+fnBody          ::= LCURLY varDeclList stmtList RCURLY      // test ok
+                ;
+
+//ok
+stmtList        ::= stmtList stmt               // test ok
+                | /* epsilon */                 // test ok
+                ;
+
+//ok
+stmt            ::= assignExp SEMICOLON         // test ok 
+                | loc PLUSPLUS SEMICOLON        // test ok 
+                | loc MINUSMINUS SEMICOLON      // test ok 
+                | CIN READ loc SEMICOLON        // test ok 
+                | COUT WRITE exp SEMICOLON      // test ok 
+                | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY   // test ok 
+                | IF LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY ELSE LCURLY varDeclList stmtList RCURLY   // test ok 
+                | WHILE LPAREN exp RPAREN LCURLY varDeclList stmtList RCURLY    // test ok 
+                | RETURN exp SEMICOLON          // test ok 
+                | RETURN SEMICOLON              // test ok 
+                | fncall SEMICOLON              // test ok 
+                ;
+//ok
+assignExp       ::= loc ASSIGN exp
+                ;
+                
+//ok. all test ok
+exp             ::= assignExp
+                | exp PLUS exp
+                | exp MINUS exp
+                | exp TIMES exp
+                | exp DIVIDE exp
+                | NOT exp
+                | exp AND exp
+                | exp OR exp
+                | exp EQUALS exp
+                | exp NOTEQUALS exp
+                | exp LESS exp
+                | exp GREATER exp
+                | exp LESSEQ exp
+                | exp GREATEREQ exp
+                | MINUS term
+                | term
+                ;
+
+//ok. all test ok
+term            ::= loc
+                | INTLITERAL
+                | STRINGLITERAL
+                | TRUE
+                | FALSE
+                | LPAREN exp RPAREN
+                | fncall
+                ;
+
+//ok. all test ok
+fncall          ::=  id LPAREN RPAREN   // fn call with no args
+                | id LPAREN actualList RPAREN  // with args
+                ;
+
+//ok. all test ok
+actualList      ::= exp 
+                | actualList COMMA exp
+                ;
+
+//ok. test ok
+type            ::= INT
+                | BOOL
+                | VOID
+                ;
+
+//ok. test ok
+loc             ::= id
+                | loc DOT id
+
+//ok. test ok
+id              ::= ID
+                ;
+

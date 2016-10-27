@@ -1,7 +1,18 @@
-int a;
+struct s {
+    int a;
+    struct ss b;
+    struct s c;
+};
 
-int fn() {
-    int b;
 
-
+void func() {
+    struct s hehe;
+#    hehe.b.a ++;
+    hehe.c.c ++;
 }
+
+
+
+
+
+
