@@ -1,0 +1,10 @@
+int a;
+struct s {
+    int sa;
+};
+
+void func() {
+    struct s fa;
+    a = fa.sa;
+}
+

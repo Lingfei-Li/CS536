@@ -152,16 +152,20 @@ class DeclListNode extends ASTnode {
 		HashMap<String,String> map = new HashMap<>();
 		for(DeclNode decl : myDecls) {
 			if(map.containsKey(decl.getName())) {
-				decl.fatalOnId("Multiply declared identifier");
+                //multiply decl
+                continue;
 			}
-			else {
-				if(decl.getType().contains("struct") && symTable.lookupGlobal(decl.getType()) == null) {
-					decl.fatalOnId("Invalid name of struct type");	// declare a variable with non-existing struct type
-				}
-				else {
-					map.put(decl.getName(), decl.getType());
-				}
-			}
+			else if(decl.getType().contains("struct") && symTable.lookupGlobal(decl.getType()) == null) {
+                // bad struct type
+                continue;
+            }
+            else if(decl.getType().equals("void")) {
+                // void type for var
+                continue;
+            }
+            else {
+                map.put(decl.getName(), decl.getType());
+            }
 		}
 		return map;
 	}
@@ -331,7 +335,13 @@ class VarDeclNode extends DeclNode {
                 }
             }
             else {
-                symTable.addDecl(myId.getName(), new VarSym(myType.getType()));
+                String myIdType = myId.getType(symTable);
+				if(myIdType != null && myIdType.contains("struct") && symTable.lookupGlobal(myIdType) == null) {
+                    ErrMsg.fatal(myId.getLineNum(), myId.getCharNum(), "Invalid name of struct type");
+				}
+                else {
+                    symTable.addDecl(myId.getName(), new VarSym(myType.getType()));
+                }
             }
         } catch(DuplicateSymException e) {
             ErrMsg.fatal(myId.getLineNum(), myId.getCharNum(), "Multiply declared identifier");
@@ -439,13 +449,22 @@ class FormalDeclNode extends DeclNode {
     }
 
     public void nameAnalysis(SymTable symTable) {
-        try {
-            symTable.addDecl(myId.getName(), new VarSym(myType.getType()));
+        try{
+            if(myType instanceof VoidNode) {
+                ErrMsg.fatal(myId.getLineNum(), myId.getCharNum(), "Non-function declared void");
+                if(symTable.lookupLocal(myId.getName()) != null) {
+                    ErrMsg.fatal(myId.getLineNum(), myId.getCharNum(), "Multiply declared identifier");
+                }
+            }
+            else {
+                symTable.addDecl(myId.getName(), new VarSym(myType.getType()));
+            }
         } catch(DuplicateSymException e) {
             ErrMsg.fatal(myId.getLineNum(), myId.getCharNum(), "Multiply declared identifier");
         } catch(EmptySymTableException e) {
             System.err.println(e);
         }
+    
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -478,9 +497,12 @@ class StructDeclNode extends DeclNode {
 	}
 
     public void nameAnalysis(SymTable symTable) {
-        // new declaration of struct. add symbol to symbol table
         try {
-			// NOTE: add "struct" before sturct declaration name
+            symTable.addScope();    // scope for sturct fields
+            myDeclList.nameAnalysis(symTable);
+            symTable.removeScope(); // end of struct decl
+
+			// NOTE: add "struct" before sturct name
             symTable.addDecl("struct " + myId.getName(), new StructSym(myId.getName(), myDeclList.toMap(symTable)));
         } catch(DuplicateSymException e) {
             ErrMsg.fatal(myId.getLineNum(), myId.getCharNum(), "Multiply declared identifier");

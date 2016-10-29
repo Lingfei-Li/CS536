@@ -1,12 +1,16 @@
 int a;
 int a;
+void a; //should report multi-decl err + void type err
 
 struct s {
+    int a;  //should be fine, as a new scope is applied
     int aa;
+    int aa;
+    void aa;
 };
 
-struct s {
-    int bb;
+struct s {  //test duplicated decl of struct
+    int bb; //should not be added to struct s
 };
 
 void func1() {
@@ -16,8 +20,9 @@ void func1() {
 }
 
 
-void func1() {
-    //though duplicated, still should be analyzed
+void func1() {  //test duplicated decl of func
+    //with duplicated name, func body should still be analyzed
+    int a;      //should be fine
     int fa;
     int fa;     //should report error
 }
