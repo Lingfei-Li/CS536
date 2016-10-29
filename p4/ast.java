@@ -152,7 +152,7 @@ class DeclListNode extends ASTnode {
 		HashMap<String,String> map = new HashMap<>();
 		for(DeclNode decl : myDecls) {
 			if(map.containsKey(decl.getName())) {
-				decl.fatalOnId("several declarations"); //TODO
+				decl.fatalOnId("Multiply declared identifier");
 			}
 			else {
 				if(decl.getType().contains("struct") && symTable.lookupGlobal(decl.getType()) == null) {
@@ -826,11 +826,8 @@ class ReturnStmtNode extends StmtNode {
 // **********************************************************************
 
 abstract class ExpNode extends ASTnode {
-	//abstract public void nameAnalysis(SymTable symTable);
+	abstract public void nameAnalysis(SymTable symTable);
     abstract public String getType(SymTable symTable);
-    public void nameAnalysis(SymTable symTable) { 
-        System.out.println("ExpNode.nameAnalysis not implemented yet");
-    }
 }
 
 class IntLitNode extends ExpNode {
@@ -842,6 +839,9 @@ class IntLitNode extends ExpNode {
 	
 	public String getType(SymTable symTable) {
 		return "int";
+	}
+
+	public void nameAnalysis(SymTable symTable) {
 	}
 
     public void unparse(PrintWriter p, int indent) {
@@ -859,6 +859,9 @@ class StringLitNode extends ExpNode {
         myCharNum = charNum;
         myStrVal = strVal;
     }
+
+	public void nameAnalysis(SymTable symTable) {
+	}
 
 	public String getType(SymTable symTable) {
 		return "String";
@@ -878,6 +881,9 @@ class TrueNode extends ExpNode {
         myLineNum = lineNum;
         myCharNum = charNum;
     }
+
+	public void nameAnalysis(SymTable symTable) {
+	}
 
 	public String getType(SymTable symTable) {
 		return "boolean";
@@ -901,6 +907,9 @@ class FalseNode extends ExpNode {
 		return "boolean";
 	}
 
+	public void nameAnalysis(SymTable symTable) {
+	}
+
     public void unparse(PrintWriter p, int indent) {
         p.print("false");
     }
@@ -922,6 +931,13 @@ class IdNode extends ExpNode {
 			this.setSym(symTable.lookupGlobal(myStrVal));
 		}
 		return mySym==null?null:mySym.getType();
+	}
+
+	public void nameAnalysis(SymTable symTable) {
+        mySym = symTable.lookupGlobal(myStrVal);
+		if(mySym == null) {
+            ErrMsg.fatal(myLineNum, myCharNum, "Undeclared identifier");
+		}
 	}
 
 	public void setSym(SemSym sym) {
@@ -956,7 +972,6 @@ class DotAccessExpNode extends ExpNode {
         myId = id;
     }
 	
-	
 	public String getType(SymTable symTable) {
 		String locType = myLoc.getType(symTable);
 		if(locType.contains("struct")) {
@@ -979,7 +994,6 @@ class DotAccessExpNode extends ExpNode {
 
 
 	public void nameAnalysis(SymTable symTable) {
-		//TODO: no need to analysis myLoc, right?
 		this.getType(symTable);
 	}
 	
@@ -991,7 +1005,7 @@ class DotAccessExpNode extends ExpNode {
     }
 
     // 2 kids
-    private ExpNode myLoc;	
+    private ExpNode myLoc;	    //DotAccessExp or Id
     private IdNode myId;
 }
 
@@ -1004,6 +1018,12 @@ class AssignNode extends ExpNode {
 	public String getType(SymTable symTable) {
 		return myLhs.getType(symTable);
 	}
+
+	public void nameAnalysis(SymTable symTable) {
+		myLhs.nameAnalysis(symTable);
+		myExp.nameAnalysis(symTable);
+	}
+
 	
     public void unparse(PrintWriter p, int indent) {
 		if (indent != -1)  p.print("(");
@@ -1033,6 +1053,11 @@ class CallExpNode extends ExpNode {
         myExpList = new ExpListNode(new LinkedList<ExpNode>());
     }
 
+	public void nameAnalysis(SymTable symTable) {
+        myId.nameAnalysis(symTable);
+        myExpList.nameAnalysis(symTable);
+	}
+
     // ** unparse **
     public void unparse(PrintWriter p, int indent) {
 	    myId.unparse(p, 0);
@@ -1053,6 +1078,10 @@ abstract class UnaryExpNode extends ExpNode {
         myExp = exp;
     }	
 	
+	public void nameAnalysis(SymTable symTable) {
+        myExp.nameAnalysis(symTable);
+	}
+
 	public String getType(SymTable symTable) {
 		return myExp.getType(symTable);
 	}
@@ -1066,6 +1095,11 @@ abstract class BinaryExpNode extends ExpNode {
         myExp1 = exp1;
         myExp2 = exp2;
     }
+
+	public void nameAnalysis(SymTable symTable) {
+        myExp1.nameAnalysis(symTable);
+        myExp2.nameAnalysis(symTable);
+	}
 
 	public String getType(SymTable symTable) {
 		if(myExp1.getType(symTable).equals(myExp2.getType(symTable)) == false) {

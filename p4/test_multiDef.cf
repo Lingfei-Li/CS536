@@ -1,0 +1,27 @@
+int a;
+int a;
+
+struct s {
+    int aa;
+};
+
+struct s {
+    int bb;
+};
+
+void func1() {
+    struct s var;
+    var.bb = 0;       //should report error, as the later decl is ignored
+    var.aa = 0;
+}
+
+
+void func1() {
+    //though duplicated, still should be analyzed
+    int fa;
+    int fa;     //should report error
+}
+
+
+void func2(int pa, int pa) {    //duplicated params
+}

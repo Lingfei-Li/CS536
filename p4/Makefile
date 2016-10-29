@@ -40,8 +40,9 @@ ErrMsg.class: ErrMsg.java
 
 ##test
 t:
-	java P4 test.cf out.txt
-	cat out.txt
+	#java P4 test.cf out.txt
+	java P4 test_multiDef.cf out_multiDef.txt
+	cat out_multiDef.txt
 
 ###
 # clean
