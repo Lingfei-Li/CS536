@@ -1,16 +1,23 @@
-struct s {
-    int a;
-    struct ss b;
-    struct s c;
+
+struct s1 {
+    int num;
 };
 
+struct s2 {
+    struct s1 next;
+};
 
-void func() {
-    struct s hehe;
-#    hehe.b.a ++;
-    hehe.c.c ++;
+struct s3 {
+    struct s2 next;
+};
+
+void function() {
+
+    struct s3 ss3;
+
+    ss31.next.next.nuu ++;
+
 }
-
 
 
 

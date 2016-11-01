@@ -47,10 +47,12 @@ public class SymTable {
         return null;
     }
     
-    public void removeScope() throws EmptySymTableException {
+    public HashMap<String,SemSym> removeScope() throws EmptySymTableException {
         if (list.isEmpty())
             throw new EmptySymTableException();
+        HashMap<String,SemSym> scope = list.get(0);
         list.remove(0);
+        return scope;       //returns the removed scope. someone may want it
     }
     
     public void print() {

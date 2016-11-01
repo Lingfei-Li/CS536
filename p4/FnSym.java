@@ -2,7 +2,7 @@ import java.util.List;
 
 public class FnSym extends SemSym{
     private String type;
-    private List<String> params;
+    private List<String> params;    //for unparser
     
     public FnSym(String type, List<String> params) {
         super();

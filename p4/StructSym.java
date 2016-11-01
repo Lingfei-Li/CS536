@@ -2,14 +2,14 @@ import java.util.*;
 
 public class StructSym extends SemSym{
     private String type;
-    private HashMap<String, String> decl;
+    private HashMap<String, SemSym> decl;
 
     public StructSym(String type) {
         super();
         this.type = type;
     }
     
-    public StructSym(String type, HashMap<String,String> decl) {
+    public StructSym(String type, HashMap<String,SemSym> decl) {
         super();
         this.type = type;
         this.decl = decl;
@@ -19,7 +19,7 @@ public class StructSym extends SemSym{
         return decl.containsKey(f);
     }
 
-    public String getFieldType(String f) {
+    public SemSym getFieldSym(String f) {
         return decl.get(f);
     }
 
