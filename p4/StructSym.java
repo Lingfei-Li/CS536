@@ -22,10 +22,6 @@ public class StructSym extends SemSym{
     public SemSym getFieldSym(String f) {
         return decl.get(f);
     }
-
-    public boolean isStruct() {
-        return true;
-    }
     
     public String getType() {
         return type;

@@ -6,10 +6,6 @@ public class VarSym extends SemSym {
         this.type = type;
     }
 
-    public boolean isStruct() {
-        return false;
-    }
-    
     public String getType() {
         return type;
     }

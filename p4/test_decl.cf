@@ -1,5 +1,11 @@
 // Test for scoping & undecl
 
+struct s {
+
+};
+
+int s;
+
 void func(int f1, int f2) {
     int f3;
 }

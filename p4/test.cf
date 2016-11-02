@@ -1,21 +1,13 @@
 
-struct s1 {
-    int num;
-};
 
-struct s2 {
-    struct s1 next;
-};
+int a;
 
-struct s3 {
-    struct s2 next;
-};
 
 void function() {
 
-    struct s3 ss3;
 
-    ss31.next.next.nuu ++;
+    struct a ss3;
+
 
 }
 

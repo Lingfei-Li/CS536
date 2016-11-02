@@ -1,0 +1,21 @@
+
+int a;      //ok
+
+struct a { };   //multi
+
+struct b {  //ok
+    int a;  //ok
+};
+
+void a(){}  //multi
+
+void b(){}  //multi
+
+void a(){   //multi, but will proceed
+    struct a c; //non-struct
+    struct b a; //ok
+    struct b b; //multi
+    struct b p; //ok
+
+
+}

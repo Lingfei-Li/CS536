@@ -9,10 +9,6 @@ public class FnSym extends SemSym{
         this.type = type;
         this.params = params;
     }
-
-    public boolean isStruct() {
-        return false;
-    }
     
     public String getType() {
         return type;
@@ -21,9 +17,10 @@ public class FnSym extends SemSym{
     public String toString() {
         String str = "";
         for(String p : params){
-            str += p + " ";
+            if(!str.equals("")) str += ",";
+            str += p;
         }
-        str += " -> " + this.type;
+        str += "->" + this.type;
         return str;
     }
 }

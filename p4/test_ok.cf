@@ -1,10 +1,29 @@
-int a;
-struct s {
-    int sa;
+
+
+struct Point {
+    int x;
+    int y;
 };
 
-void func() {
-    struct s fa;
-    a = fa.sa;
+struct P2 {
+    struct Point next;
+};
+
+struct P3 {
+    struct P2 next;
+};
+
+int f(int x, bool b) { }
+void g() {
+    int a;
+    bool b;
+    struct Point p;
+    struct P3 p3;
+    p.x = a;
+    b = a == 3;
+    f(a + p.y*2, b);
+    g();
+
+    p3.next.next.x ++;
 }
 

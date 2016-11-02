@@ -13,6 +13,9 @@ struct s {  //multi-decl
     int bb; //should not be added to struct s
 };
 
+int s;
+void s() {}
+
 void func1() {
     struct s var;
     int var;            //multi-decl
