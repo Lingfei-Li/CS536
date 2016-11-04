@@ -1,0 +1,63 @@
+
+
+struct Point {
+    int x;
+    int y;
+};
+
+struct P2 {
+    struct Point next;
+};
+
+struct P3 {
+    struct P2 next;
+};
+
+int f(int x, bool b) { }
+
+void g() {
+    int a;
+    bool b;
+    struct Point p;
+    struct P3 p3;
+    p.x = a;
+    b = a == 3;
+    f(a + p.y*2, b);
+    g();
+
+    a = 1;
+    a = "foo";
+    a = true;
+    a = false;
+
+    a ++;
+    a --;
+    cin>> a;
+    cout<< a;
+
+    a = -a;
+    a = !a;
+    a = a + b = a - b = a * b = a / b = a && b = a || b = a == b = a != b = a < b = a > b = a <= b = a >= b;
+
+    p3.next.next.x ++;
+
+    if(a) {
+        int a;
+    }
+
+
+    if(a) {
+        int a;
+    }
+    else {
+        int a;
+    }
+
+    while(a) {
+        int a;
+    }
+
+    return a;
+    return p3;
+}
+

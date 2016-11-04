@@ -1,0 +1,138 @@
+
+# struct testing
+struct struct_s1 {
+    int num;
+};
+
+struct struct_s2 {
+    struct struct_s1 next;
+};
+
+struct struct_s3 {
+    struct struct_s2 next;
+};
+
+void struct_function() {
+
+    int struct_a;
+    struct bad bad_s;               // bad declaration: struct bad DNE
+    struct struct_s3 struct_ss3;
+
+    struct_ss3 = struct_ss3.bad = struct_ss3.next.bad = struct_ss3.next.next.bad;         //invalid field
+
+    struct_a = struct_a.struct_b = struct_ss3.next.next.num.bad;            //dot-access non-struct
+
+    struct_a.struct_a.struct_a ++;             //nested non-struct dot-access
+
+    struct_b.struct_a.struct_a ++;             //nested undecl + non-struct dot-access
+
+    struct_c.struct_c ++;                 //undecl + dot-access of non-struct type
+
+}
+
+
+# multiple decl testing
+
+int multi_a;
+int multi_a;  //multi-decl
+void multi_a; //multi-decl + void var
+struct bad multi_a; //invalid struct name. no multi err
+
+struct multi_s {
+    int multi_a;
+    int multi_aa;
+    int multi_aa;     //multi-decl
+    void multi_aa;    //multi-decl + void var
+};
+
+struct multi_s {  //multi-decl
+    int multi_bb; //should not be added to struct s
+};
+
+int multi_s;      //multi
+void multi_s() {  //multi. don't proceed func body
+    int multi_s;  //not reached. no err
+}
+
+void multi_func1() {
+    struct multi_s multi_var;
+    int multi_var;            //multi-decl
+    multi_var.multi_bb = 0;         //should report error, as the later decl of struct s is ignored
+    multi_var.multi_aa = 0;
+}
+
+
+void multi_func1() {          //mult-decl
+    //func should still be analyzed
+    int multi_a;
+    int multi_fa;
+    int multi_fa;     //multi-decl
+}
+
+
+void multi_func2(int multi_pa, int multi_pa, int multi_pb) {    //duplicated params
+    multi_pb = 1;           //ok. not affected by duplicated decl of multi_pa
+}
+
+
+
+# scoping & undecl test
+
+struct scope_s {
+
+};
+
+int scope_s;      //multi
+
+void scope_func(int scope_f1, int scope_f2) {
+    int scope_f3;
+}
+
+void scope_func() {           //multi, but should add a new scope for its body
+
+    int scope_a;
+
+    struct bad scope_b;       //invalid struct name
+
+    scope_b ++;               //undecl
+
+    if(scope_a) { int tmp; }
+
+    if(scope_a) { int tmp; }
+    else  { int tmp; }
+
+    while(scope_a) { int tmp; }
+
+    tmp ++;                               //undeclared
+
+    scope_f1 = scope_f2 = scope_f3;       //undeclared
+
+    scope_a();                //undeclared (not a func)
+}
+
+# mixed type testing
+int mix_a;      //ok
+
+struct mix_a { };   //multi
+
+struct mix_b {  //ok
+    int mix_a;  //ok
+};
+
+void mix_a(){   //multi
+    int mix_a;  //not processed
+}
+
+void mix_b(){}  //multi
+
+void mix_c(){}  //ok
+
+void mix_c(){   //multi, but func body will be processed
+    struct mix_a mix_c; //non-struct
+    struct mix_b mix_a; //ok
+    struct mix_b mix_b; //multi
+    struct mix_b mix_p; //invalid struct name (mix_b is overwritten)
+}
+
+
+

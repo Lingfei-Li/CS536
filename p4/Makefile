@@ -40,11 +40,8 @@ ErrMsg.class: ErrMsg.java
 
 ##test
 t:
-	java P4 test_multi.cf out_multi.txt
-	java P4 test_mix.cf out_multi.txt
-	java P4 test_struct.cf out_struct.txt
-	java P4 test_scope.cf out_scope.txt
-	java P4 test_ok.cf out_ok.txt
+	java P4 nameErrors.cf nameErrors.txt
+	java P4 test.cf out_ok.txt
 	cat out_ok.txt
 
 ###
