@@ -4,13 +4,13 @@ struct s {
 
 };
 
-int s;
+int s;      //multi
 
 void func(int f1, int f2) {
     int f3;
 }
 
-void func() {
+void func() {           //multi, but should add a new scope for its body
 
     int a;
 
@@ -29,7 +29,7 @@ void func() {
 
     f1 = f2 = f3;       //undeclared
 
-    a();          //undeclared (not a func)
+    a();                //undeclared (not a func)
     
 
 }

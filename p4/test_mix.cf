@@ -7,11 +7,15 @@ struct b {  //ok
     int a;  //ok
 };
 
-void a(){}  //multi
+void a(){   //multi
+    int a;  //not processed
+}
 
 void b(){}  //multi
 
-void a(){   //multi, but will proceed
+void c(){}  //ok
+
+void c(){   //multi, but func body will be processed
     struct a c; //non-struct
     struct b a; //ok
     struct b b; //multi

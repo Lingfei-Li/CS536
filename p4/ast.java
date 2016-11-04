@@ -318,7 +318,6 @@ class VarDeclNode extends DeclNode {
                     ErrMsg.fatal(myId.getLineNum(), myId.getCharNum(), "Invalid name of struct type");
 				}
                 else {
-                    System.out.println("add var decl: " + myId.getName());
                     symTable.addDecl(myId.getName(), new VarSym(myType.getType()));
                 }
             }
@@ -376,6 +375,10 @@ class FnDeclNode extends DeclNode {
                 symTable.addDecl(myId.getName(), new FnSym(myType.getType(), myFormalsList.getType()));
             } catch(DuplicateSymException e) {
                 ErrMsg.fatal(myId.getLineNum(), myId.getCharNum(), "Multiply declared identifier");
+                if(symTable.lookupGlobal(myId.getName()) instanceof FnSym == false) {
+                    //if the existing name is not a func, don't process the func body
+                    return;
+                }
             }
             // function as a new scope
             symTable.addScope();

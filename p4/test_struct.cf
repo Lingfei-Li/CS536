@@ -25,6 +25,8 @@ void function() {
 
     b.a.a ++;             //nested undecl + non-struct dot-access
 
+    c.c ++;                 //undecl + dot-access of non-struct type
+
 }
 
 
