@@ -1,0 +1,101 @@
+struct s1{
+    int sa;
+};
+
+struct s2{
+    struct s1 next;
+};
+
+void voidFunc() {
+    return 1;
+}
+
+int func(int a, bool a2) {
+    bool b;
+    struct s2 c;
+    a(int) = (-true);
+    a(int) = (-false);
+    a(int) = (-"string");
+    b(bool) = (-b(bool));
+    a(int) = (-c(s2));
+    a(int) = (-c(s2).next(s1));
+    b(bool)++;
+    c(s2)++;
+    func(int,bool->int)++;
+    s1(struct)++;
+    b(bool)--;
+    c(s2)--;
+    func(int,bool->int)--;
+    s1(struct)--;
+    cout << func(int,bool->int);
+    cout << s1(struct);
+    cout << c(s2);
+    cout << voidFunc(->void)();
+    cin >> func(int,bool->int);
+    cin >> s1(struct);
+    cin >> c(s2);
+    a(int)();
+    func(int,bool->int)(1, 2, 3);
+    func(int,bool->int)(1, 2);
+    return;
+    return true;
+    b(bool) = (1 + true);
+    b(bool) = (true + 1);
+    b(bool) = (true + false);
+    b(bool) = (b(bool) + c(s2));
+    b(bool) = (func(int,bool->int) + s1(struct));
+    b(bool) = (func(int,bool->int) - s1(struct));
+    b(bool) = (func(int,bool->int) * s1(struct));
+    b(bool) = (func(int,bool->int) / s1(struct));
+    a(int) = (!123);
+    a(int) = (!"string");
+    a(int) = (!a(int));
+    b(bool) = (!c(s2));
+    b(bool) = (!c(s2).next(s1));
+    b(bool) = (!c(s2).next(s1).sa(int));
+    b(bool) = (func(int,bool->int) || s1(struct));
+    b(bool) = (1 || a(int));
+    b(bool) = (true || a(int));
+    b(bool) = (func(int,bool->int) && s1(struct));
+    b(bool) = (1 && a(int));
+    b(bool) = (true && a(int));
+    b(bool) = (true < 1);
+    b(bool) = (a(int) > b(bool));
+    b(bool) = (false <= s1(struct));
+    b(bool) = (b(bool) >= func(int,bool->int));
+    a(int) = true;
+    a(int) = "string";
+    a(int) = b(bool);
+    a(int) = c(s2);
+    a(int) = (b(bool) = c(s2));
+    func(int,bool->int) = func(int,bool->int);
+    s1(struct) = s1(struct);
+    c(s2) = c(s2);
+    a(int) = (a(int) == b(bool));
+    a(int) = (1 == true);
+    a(int) = (func(int,bool->int) == s1(struct));
+    a(int) = (func(int,bool->int) == func(int,bool->int));
+    a(int) = (s1(struct) == s1(struct));
+    a(int) = (c(s2) == c(s2));
+    a(int) = (voidFunc(->void)() == voidFunc(->void)());
+    a(int) = (a(int) != b(bool));
+    a(int) = (1 != true);
+    a(int) = (func(int,bool->int) != s1(struct));
+    a(int) = (func(int,bool->int) != func(int,bool->int));
+    a(int) = (s1(struct) != s1(struct));
+    a(int) = (c(s2) != c(s2));
+    a(int) = (voidFunc(->void)() != voidFunc(->void)());
+    if (1) {
+        a(int) = false;
+    }
+    if (1) {
+        a(int) = false;
+    }
+    else {
+        a(int) = false;
+    }
+    while (1) {
+        a(int) = false;
+    }
+}
+
