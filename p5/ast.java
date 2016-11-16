@@ -788,11 +788,8 @@ abstract class StmtNode extends ASTnode {
 
     /**
      * typeCheck
-     * TODO: switch to abstract to enforce all binary node to implement it
      */
-    public void typeCheck(FnSym fnSym) {
-        System.out.println("stmtNode typeCheck for class " + this.getClass().getSimpleName()  + "not implemented yet");
-    }
+    abstract public void typeCheck(FnSym fnSym);
 }
 
 class AssignStmtNode extends StmtNode {
@@ -1755,12 +1752,8 @@ abstract class BinaryExpNode extends ExpNode {
 
     /**
      * typeCheck
-     * TODO: switch to abstract to enforce all binary node to implement it
      */
-    public Type typeCheck() {
-        System.out.println("BinaryExp typeCheck for class " + this.getClass().getSimpleName()  + "not implemented yet");
-        return new ErrorType();
-    }
+    abstract public Type typeCheck();
 
     /**
      * typeCheck with required type and error msg
