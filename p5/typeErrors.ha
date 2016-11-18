@@ -2,6 +2,7 @@
 
 struct s1 {
     int sa;
+    bool sb;
 };
 
 struct s2 {
@@ -118,20 +119,23 @@ int func(int a, bool a2) {
     a = c != c;
     a = voidFunc() != voidFunc();
 
-    //if stmt
-    if(1) { 
-        a = false;
-    }
-    if(1) {
-        a = false;
-    }
-    else { 
-        a = false;
-    }
-
     //while stmt
     while(1) {
-        a = false;
+        a = false;  //should still be processed
     }
+
+    //if stmt
+    if(1) { a = false; }
+    if(a) { }
+    if(c.next.sa) { }
+    if(a = 1) { }
+    if("str" == "str") { }
+    if(func(1,true)) { }
+    if(voidFunc()) { }
+    if(1) { } else { }
+
+    return -(!(!false+1));
+
+    a ++;
 
 }

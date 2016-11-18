@@ -1,5 +1,6 @@
 struct s1{
     int sa;
+    bool sb;
 };
 
 struct s2{
@@ -85,17 +86,29 @@ int func(int a, bool a2) {
     a(int) = (s1(struct) != s1(struct));
     a(int) = (c(s2) != c(s2));
     a(int) = (voidFunc(->void)() != voidFunc(->void)());
-    if (1) {
-        a(int) = false;
-    }
-    if (1) {
-        a(int) = false;
-    }
-    else {
-        a(int) = false;
-    }
     while (1) {
         a(int) = false;
     }
+    if (1) {
+        a(int) = false;
+    }
+    if (a(int)) {
+    }
+    if (c(s2).next(s1).sa(int)) {
+    }
+    if ((a(int) = 1)) {
+    }
+    if (("str" == "str")) {
+    }
+    if (func(int,bool->int)(1, true)) {
+    }
+    if (voidFunc(->void)()) {
+    }
+    if (1) {
+    }
+    else {
+    }
+    return (-(!((!false) + 1)));
+    a(int)++;
 }
 

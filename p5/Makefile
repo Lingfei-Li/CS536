@@ -57,6 +57,8 @@ EmptySymTableException.class: EmptySymTableException.java
 t:
 	#java P5 test.ha test.out
 	java P5 typeErrors.ha out.typeErrors
+ta:
+	java P5 taTest.ha out.typeErrors
 
 ###
 # clean
