@@ -143,8 +143,16 @@ public class P5 {
 		}
 		
 		astRoot.nameAnalysis();  // perform name analysis
+
+		if (ErrMsg.getErr()) {  
+			return P5.RESULT_OTHER_ERROR;
+		}
 		
 		astRoot.typeCheck();
+
+		if (ErrMsg.getErr()) {  
+			return P5.RESULT_TYPE_ERROR;
+		}
 		
 		astRoot.unparse(outFile, 0);
 		return P5.RESULT_CORRECT;
@@ -162,6 +170,8 @@ public class P5 {
 			pukeAndDie("Syntax error", resultCode);
 		case RESULT_TYPE_ERROR:
 			pukeAndDie("Type checking error", resultCode);
+		case RESULT_OTHER_ERROR:
+			pukeAndDie("Name analysis error", resultCode);
 		default:
 			pukeAndDie("Type checking error", RESULT_OTHER_ERROR);
 		}
