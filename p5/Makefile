@@ -59,7 +59,7 @@ t:
 	cat test.out
 	#java P5 typeErrors.ha out.typeErrors
 ta:
-	java P5 taTest.ha out.typeErrors
+	java P5 taTest.ha taTest.out
 
 ###
 # clean
