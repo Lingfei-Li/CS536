@@ -626,3 +626,9 @@ int testIfElse(int a, bool a2) {
 
     }
 }
+
+
+void ff() {
+    if(1+true) {}
+
+}

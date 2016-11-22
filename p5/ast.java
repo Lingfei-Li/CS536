@@ -785,10 +785,6 @@ class StructNode extends TypeNode {
 
 abstract class StmtNode extends ASTnode {
     abstract public void nameAnalysis(SymTable symTab);
-
-    /**
-     * typeCheck
-     */
     abstract public void typeCheck(FnSym fnSym);
 }
 
@@ -999,7 +995,7 @@ class IfStmtNode extends StmtNode {
         if(expType.isErrorType()) {
             //no cascade error
         } 
-        if(expType.isBoolType() == false) {
+        else if(expType.isBoolType() == false) {
             ErrMsg.fatal(myExp.lineNum(), myExp.charNum(), "Non-bool expression used as an if condition");
         }
         myStmtList.typeCheck(fnSym);
@@ -1061,7 +1057,7 @@ class IfElseStmtNode extends StmtNode {
         if(expType.isErrorType()) {
             //no cascade error
         } 
-        if(expType.isBoolType() == false) {
+        else if(expType.isBoolType() == false) {
             ErrMsg.fatal(myExp.lineNum(), myExp.charNum(), "Non-bool expression used as an if condition");
         }
         myThenStmtList.typeCheck(fnSym);
@@ -1140,7 +1136,7 @@ class WhileStmtNode extends StmtNode {
         if(expType.isErrorType()) {
             //no cascade error
         } 
-        if(expType.isBoolType() == false) {
+        else if(expType.isBoolType() == false) {
             ErrMsg.fatal(myExp.lineNum(), myExp.charNum(), "Non-bool expression used as a while condition");
         }
         myStmtList.typeCheck(fnSym);
@@ -1227,6 +1223,7 @@ class ReturnStmtNode extends StmtNode {
             }
             Type expType = myExp.typeCheck();
             if(expType.isErrorType()) {
+                //no cascade error
                 return;
             }
             else if(expType.equals(fnRetType) == false) {
@@ -1601,10 +1598,10 @@ class AssignNode extends ExpNode {
      * typeCheck
      */
     public Type typeCheck() {
-        //System.out.println("Assign node typeCheck");
         Type ltype = myLhs.typeCheck();
         Type rtype = myExp.typeCheck();
         if(ltype.isErrorType() || rtype.isErrorType()) {
+            //no cascade error
             return new ErrorType();
         }
         else if(ltype.isFnType() && rtype.isFnType()) {
@@ -1762,6 +1759,7 @@ abstract class BinaryExpNode extends ExpNode {
         Type ltype = myExp1.typeCheck();
         Type rtype = myExp2.typeCheck();
         if(ltype.isErrorType() || rtype.isErrorType()) {
+            //no cascade error
             return new ErrorType();
         }
         if(ltype.equals(requiredType) == false) {
@@ -1810,6 +1808,7 @@ class UnaryMinusNode extends UnaryExpNode {
      * */
     public Type typeCheck() {
         if(myExp.typeCheck().isErrorType() == true) {
+            //no cascade error
             return new ErrorType();
         }
         else if(myExp.typeCheck().isIntType() == false) {
@@ -1840,6 +1839,7 @@ class NotNode extends UnaryExpNode {
      * */
     public Type typeCheck() {
         if(myExp.typeCheck().isErrorType() == true) {
+            //no cascade error
             return new ErrorType();
         }
         else if(myExp.typeCheck().isBoolType() == false) {
@@ -1982,6 +1982,7 @@ class EqualsNode extends BinaryExpNode {
         Type ltype = myExp1.typeCheck();
         Type rtype = myExp2.typeCheck();
         if(ltype.isErrorType() || rtype.isErrorType()) {
+            //no cascade error
             return new ErrorType();
         }
         else if(ltype.isVoidType() && rtype.isVoidType()) {
@@ -2030,6 +2031,7 @@ class NotEqualsNode extends BinaryExpNode {
         Type ltype = myExp1.typeCheck();
         Type rtype = myExp2.typeCheck();
         if(ltype.isErrorType() || rtype.isErrorType()) {
+            //no cascade error
             return new ErrorType();
         }
         else if(ltype.isVoidType() && rtype.isVoidType()) {

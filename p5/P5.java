@@ -149,7 +149,7 @@ public class P5 {
 			return P5.RESULT_NAME_ERROR;
 		}
 		
-		astRoot.typeCheck();
+		astRoot.typeCheck();     //perform type check
 
 		if (ErrMsg.getErr()) {  
 			return P5.RESULT_TYPE_ERROR;
