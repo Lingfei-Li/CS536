@@ -120,19 +120,20 @@ int func(int a, bool a2) {
     a = voidFunc() != voidFunc();
 
     //while stmt
-    while(1) {
+    while(1+true) {
         a = false;  //should still be processed
     }
 
     //if stmt
     if(1) { a = false; }
+    if(1+true) { a = false; }
     if(a) { }
     if(c.next.sa) { }
     if(a = 1) { }
     if("str" == "str") { }
     if(func(1,true)) { }
     if(voidFunc()) { }
-    if(1) { } else { }
+    if(1+true) { } else { }
 
 }
 
@@ -627,8 +628,3 @@ int testIfElse(int a, bool a2) {
     }
 }
 
-
-void ff() {
-    if(1+true) {}
-
-}
