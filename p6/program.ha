@@ -3,7 +3,7 @@
 int g1;
 int g2;
 
-int main(int a1, int a2, int a3, int a4) {
+int main(int a1, int a2, int a3) {
 	int b1;
 	int b2;
 	int b3;
@@ -14,7 +14,6 @@ int main(int a1, int a2, int a3, int a4) {
 	return a1;
 	return a2;
 	return a3;
-	return a4;
 	return b1;
 	return b2;
 	return b3;

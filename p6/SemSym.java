@@ -37,11 +37,16 @@ class FnSym extends SemSym {
     private Type returnType;
     private int numParams;
     private List<Type> paramTypes;
+	private int localVarSize;
+	private int paramSize;
     
-    public FnSym(Type type, int numparams) {
+    public FnSym(Type type, int numParams, int paramSize, int localVarSize) {
         super(new FnType());
         returnType = type;
-        numParams = numparams;
+        this.numParams = numParams;
+        this.paramSize = paramSize;
+		this.localVarSize = localVarSize;
+		
     }
 
     public void addFormals(List<Type> L) {
@@ -54,6 +59,14 @@ class FnSym extends SemSym {
 
     public int getNumParams() {
         return numParams;
+    }
+
+    public int getLocalVarSize() {
+        return this.localVarSize;
+    }
+
+    public int getParamSize() {
+        return this.paramSize;
     }
 
     public List<Type> getParamTypes() {

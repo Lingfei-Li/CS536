@@ -160,6 +160,14 @@ class DeclListNode extends ASTnode {
     public DeclListNode(List<DeclNode> S) {
         myDecls = S;
     }
+
+    public int getTotalVarSize() {
+        int size = 0;
+        for(DeclNode d : myDecls) {
+            size += ((VarDeclNode)d).getSize();
+        }
+        return size;
+    }
     
     public void setIsFnBodyWithOffset(int offset) {
     	this.isFnBody = true;
@@ -278,6 +286,10 @@ class FnBodyNode extends ASTnode {
         myStmtList = stmtList;
     }
 
+    public int getTotalVarSize() {
+        return myDeclList.getTotalVarSize();
+    }
+
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
@@ -311,6 +323,7 @@ class FnBodyNode extends ASTnode {
     private DeclListNode myDeclList;
     private StmtListNode myStmtList;
 	
+	// offset to start with. Includes params + 8bytes for control link and return addr
 	private int offset = 0;
 }
 
@@ -428,6 +441,12 @@ class VarDeclNode extends DeclNode {
         mySize = size;
     }
 
+    public int getSize() {
+        if(mySize == NOT_STRUCT)
+            return 4;
+        return 4;   //TODO: change for struct
+    }
+
     public void setOffset(int offset) {
     	this.offset = offset;
     }
@@ -521,8 +540,9 @@ class VarDeclNode extends DeclNode {
     private TypeNode myType;
     private IdNode myId;
     private int mySize;  // use value NOT_STRUCT if this is not a struct type
-    private int offset = -1;
     public static int NOT_STRUCT = -1;
+
+    private int offset = -1;    //offset from $fp for this variable name
 }
 
 class FnDeclNode extends DeclNode {
@@ -560,7 +580,9 @@ class FnDeclNode extends DeclNode {
         
         else { // add function name to local symbol table
             try {
-                sym = new FnSym(myType.type(), myFormalsList.length());
+                int paramSize = 4;
+                sym = new FnSym(myType.type(), myFormalsList.length(), 
+                        paramSize*myFormalsList.length(), myBody.getTotalVarSize());
                 symTab.addDecl(name, sym);
                 myId.link(sym);
             } catch (DuplicateSymException ex) {
@@ -615,7 +637,10 @@ class FnDeclNode extends DeclNode {
         myFormalsList.unparse(p, 0);
         p.println(") {");
         myBody.unparse(p, indent+4);
-        p.println("}\n");
+        p.println("}");
+        FnSym sym = (FnSym)(myId.sym());
+        p.println("(param size: "+sym.getParamSize()+", var size: " + sym.getLocalVarSize() + ")");
+        p.println("");
     }
 
     // 4 kids
