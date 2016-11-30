@@ -157,6 +157,7 @@ public class P6 {
 			return P6.RESULT_TYPE_ERROR;
 		}
 		
+		astRoot.unparse(outFile, 0);
 		return P6.RESULT_CORRECT;
 	}
 	

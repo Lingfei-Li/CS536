@@ -56,6 +56,7 @@ EmptySymTableException.class: EmptySymTableException.java
 #
 t:
 	java P6 program.ha out.program
+	cat out.program
 
 q:
 	~cs536-1/public/tools/bin/QtSpim -file mips_code.s &

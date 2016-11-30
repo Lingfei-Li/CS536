@@ -1,0 +1,19 @@
+int g1;
+int g2;
+int main(int a1, int a2, int a3, int a4) {
+    int b1;
+    int b2;
+    int b3;
+    int b4;
+    return a1(int (0));
+    return a2(int (-4));
+    return a3(int (-8));
+    return a4(int (-12));
+    return b1(int (-24));
+    return b2(int (-28));
+    return b3(int (-32));
+    return b4(int (-36));
+    return g1(int (-1));
+    return g2(int (-1));
+}
+

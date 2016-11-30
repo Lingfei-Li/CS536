@@ -160,6 +160,11 @@ class DeclListNode extends ASTnode {
     public DeclListNode(List<DeclNode> S) {
         myDecls = S;
     }
+    
+    public void setIsFnBodyWithOffset(int offset) {
+    	this.isFnBody = true;
+		this.offset = offset;
+    }
 
     /**
      * nameAnalysis
@@ -176,8 +181,13 @@ class DeclListNode extends ASTnode {
      * decls in the list.
      */    
     public void nameAnalysis(SymTable symTab, SymTable globalTab) {
+    	int varOffset = 0;
         for (DeclNode node : myDecls) {
             if (node instanceof VarDeclNode) {
+            	if(this.isFnBody) {
+            		((VarDeclNode) node).setOffset(this.offset + varOffset);
+            		varOffset -= 4;
+            	}
                 ((VarDeclNode)node).nameAnalysis(symTab, globalTab);
             } else {
                 node.nameAnalysis(symTab);
@@ -208,6 +218,10 @@ class DeclListNode extends ASTnode {
 
     // list of kids (DeclNodes)
     private List<DeclNode> myDecls;
+    
+    // if this is function body var decl list
+    private boolean isFnBody = false;
+	private int offset = -1;
 }
 
 class FormalsListNode extends ASTnode {
@@ -224,7 +238,10 @@ class FormalsListNode extends ASTnode {
      */
     public List<Type> nameAnalysis(SymTable symTab) {
         List<Type> typeList = new LinkedList<Type>();
+        int offset = 0;
         for (FormalDeclNode node : myFormals) {
+        	node.setOffset(offset);
+        	offset -= 4;
             SemSym sym = node.nameAnalysis(symTab);
             if (sym != null) {
                 typeList.add(sym.getType());
@@ -261,6 +278,10 @@ class FnBodyNode extends ASTnode {
         myStmtList = stmtList;
     }
 
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+	
     /**
      * nameAnalysis
      * Given a symbol table symTab, do:
@@ -268,6 +289,7 @@ class FnBodyNode extends ASTnode {
      * - process the statement list
      */
     public void nameAnalysis(SymTable symTab) {
+    	myDeclList.setIsFnBodyWithOffset(offset);
         myDeclList.nameAnalysis(symTab);
         myStmtList.nameAnalysis(symTab);
     }    
@@ -284,9 +306,12 @@ class FnBodyNode extends ASTnode {
         myStmtList.unparse(p, indent);
     }
 
+	
     // 2 kids
     private DeclListNode myDeclList;
     private StmtListNode myStmtList;
+	
+	private int offset = 0;
 }
 
 class StmtListNode extends ASTnode {
@@ -403,6 +428,10 @@ class VarDeclNode extends DeclNode {
         mySize = size;
     }
 
+    public void setOffset(int offset) {
+    	this.offset = offset;
+    }
+    
     /**
      * nameAnalysis (overloaded)
      * Given a symbol table symTab, do:
@@ -462,7 +491,7 @@ class VarDeclNode extends DeclNode {
                     sym = new StructSym(structId);
                 }
                 else {
-                    sym = new SemSym(myType.type());
+                    sym = new SemSym(myType.type(), offset);
                 }
                 symTab.addDecl(name, sym);
                 myId.link(sym);
@@ -492,7 +521,7 @@ class VarDeclNode extends DeclNode {
     private TypeNode myType;
     private IdNode myId;
     private int mySize;  // use value NOT_STRUCT if this is not a struct type
-
+    private int offset = -1;
     public static int NOT_STRUCT = -1;
 }
 
@@ -552,7 +581,11 @@ class FnDeclNode extends DeclNode {
         if (sym != null) {
             sym.addFormals(typeList);
         }
+		
+		int sizeOfFormal = 4;
+		int localVarOffset = -(8 + myFormalsList.length()*sizeOfFormal);
         
+		myBody.setOffset(localVarOffset);
         myBody.nameAnalysis(symTab); // process the function body
         
         try {
@@ -597,6 +630,10 @@ class FormalDeclNode extends DeclNode {
         myType = type;
         myId = id;
     }
+    
+    public void setOffset(int offset) {
+    	this.offset = offset;
+    }
 
     /**
      * nameAnalysis
@@ -625,7 +662,7 @@ class FormalDeclNode extends DeclNode {
         
         if (!badDecl) {  // insert into symbol table
             try {
-                sym = new SemSym(myType.type());
+                sym = new SemSym(myType.type(), offset);
                 symTab.addDecl(name, sym);
                 myId.link(sym);
             } catch (DuplicateSymException ex) {
@@ -651,6 +688,7 @@ class FormalDeclNode extends DeclNode {
     // 2 kids
     private TypeNode myType;
     private IdNode myId;
+    private int offset;
 }
 
 class StructDeclNode extends DeclNode {
