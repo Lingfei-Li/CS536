@@ -1,19 +1,54 @@
-int g1;
-int g2;
-int main(int a1, int a2, int a3) {
-    int b1;
-    int b2;
-    int b3;
-    int b4;
-    return a1(int (0));
-    return a2(int (-4));
-    return a3(int (-8));
-    return b1(int (-20));
-    return b2(int (-24));
-    return b3(int (-28));
-    return b4(int (-32));
-    return g1(int (-1));
-    return g2(int (-1));
-}
-(param size: 12, var size: 16)
-
+	.data
+	.align 2
+_g1:	.space 4
+	.data
+	.align 2
+_g2:	.space 4
+	.text
+_func:
+	sw    $ra, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	sw    $fp, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	addu  $fp, $sp, 36	#Set FP
+	subu  $sp, $sp, 16	#space for local var
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+#+++++ WARN:ReturnStmtNode has not implemented codegen yet
+_funcRet:
+	lw    $ra, -12($fp)	#Restore RA
+	move  $t0, $fp		#Save callee's fp
+	lw    $fp, -16($fp)	#Restore caller's FP
+	move  $sp, $t0		#Restore caller's SP
+	jr    $ra		#Return
+	.text
+	.globl main
+main:
+	sw    $ra, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	sw    $fp, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	addu  $fp, $sp, 8	#Set FP
+	subu  $sp, $sp, 0	#space for local var
+#Write Stmt Begins. Evaluate Exp:
+	li    $t0, 1
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+#Put value to register and syscall
+	lw    $a0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	li    $v0, 1
+	syscall
+#Write Stmt Over.
+_mainRet:
+	lw    $ra, 0($fp)	#Restore RA
+	move  $t0, $fp		#Save callee's fp
+	lw    $fp, -4($fp)	#Restore caller's FP
+	move  $sp, $t0		#Restore caller's SP
+	jr    $ra		#Return

@@ -21,7 +21,10 @@ parser.java: harambe.cup
 Yylex.class: harambe.jlex.java sym.class ErrMsg.class
 	$(JC) harambe.jlex.java
 
-ASTnode.class: ast.java Type.java
+Codegen.class: 
+	$(JC) -g Codegen.java
+
+ASTnode.class: ast.java Type.java Codegen.java
 	$(JC) -g ast.java
 
 harambe.jlex.java: harambe.jlex sym.class

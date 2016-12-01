@@ -53,6 +53,49 @@ public class Codegen {
     // GENERATE OPERATIONS
     // **********************************************************************
     // **********************************************************************
+    //
+
+    // @Lingfei
+    // **********************************************************************
+    // generateFuncEntry
+    //    given:  function name, function symbol
+    //    do:     push return add, push control link, set FP, space for var
+    // **********************************************************************
+    public static void generateFuncEntry(String funcName, FnSym sym) {
+        p.println("\t.text");
+        if(funcName.equals("main")) {
+            p.println("\t.globl main");
+            p.println("main:");
+        }
+        else {
+            p.println("_"+funcName+":");
+        }
+        genPush("$ra");
+        genPush("$fp");
+        int fpDistSp = sym.getLocalVarSize()+sym.getParamSize()+8;
+        generateWithComment("addu", "Set FP", 
+                FP, SP, fpDistSp); 
+        generateWithComment("subu", "space for local var", 
+                SP, SP, sym.getLocalVarSize()); 
+
+    }
+
+    // @Lingfei
+    // **********************************************************************
+    // generateFuncExit
+    //    given:  function name, function symbol
+    //    do:     
+    // **********************************************************************
+    public static void generateFuncExit(String funcName, FnSym sym) {
+        p.println("_"+funcName+"Ret:");
+        int paramSize = sym.getParamSize();
+        generateIndexed("lw", RA, FP, -paramSize, "Restore RA");
+        generateWithComment("move", "Save callee's fp", T0, FP);
+        generateIndexed("lw", FP, FP, -(paramSize+4), "Restore caller's FP");
+        generateWithComment("move", "Restore caller's SP", SP, T0);
+        //Note: return statements should put return value to V0
+        generateWithComment("jr", "Return", RA);
+    }
     
     // **********************************************************************
     // generateWithComment
@@ -141,6 +184,21 @@ public class Codegen {
         for (int k = 1; k <= space; k++) 
             p.print(" ");
         p.println(arg1 + ", " + arg2 + ", " + arg3);
+    }
+
+    public static void generateWithComment(String opcode, String comment, String arg1, String arg2,
+                                int arg3) {
+        int space = MAXLEN - opcode.length() + 2;
+    
+        p.print("\t" + opcode);
+        for (int k = 1; k <= space; k++) 
+            p.print(" ");
+        p.print(arg1 + ", " + arg2 + ", " + arg3);
+
+        if (comment != "") 
+            p.print("\t#" + comment);
+        p.println();
+
     }
     
     // **********************************************************************

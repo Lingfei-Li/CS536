@@ -17,6 +17,10 @@ public class SemSym {
         this.type = type;
         this.offset = -1;
     }
+
+    public int getOffset() {
+        return this.offset;
+    }
     
     public Type getType() {
         return type;
