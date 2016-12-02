@@ -122,157 +122,65 @@ abstract class ASTnode {
     public static final String T0 = "$t0";
     public static final String T1 = "$t1";
 
-    // **********************************************************************
-    // **********************************************************************
-    // GENERATE OPERATIONS
-    // **********************************************************************
-    // **********************************************************************
-    // **********************************************************************
-    // generateWithComment
-    //    given:  op code, comment, and 0 to 3 string args
-    //    do:     write nicely formatted code (ending with new line)
-    // **********************************************************************
     public static void generateWithComment(String opcode, String comment,
                                         String arg1, String arg2, String arg3) {
-        Codegen.generateWithComment(opcode, comment, arg1, arg2, arg3);
-    }
-
+        Codegen.generateWithComment(opcode, comment, arg1, arg2, arg3); }
     public static void generateWithComment(String opcode, String comment,
                                            String arg1, String arg2) {
-        generateWithComment(opcode, comment, arg1, arg2, "");
-    }
-
+        generateWithComment(opcode, comment, arg1, arg2, ""); }
     public static void generateWithComment(String opcode, String comment,
                                            String arg1) {
-        generateWithComment(opcode, comment, arg1, "", "");
-    }
-
+        generateWithComment(opcode, comment, arg1, "", ""); }
     public static void generateWithComment(String opcode, String comment) {
-        generateWithComment(opcode, comment, "", "", "");
-    }
-
-    // **********************************************************************
-    // generate
-    //    given:  op code, and 0 to 3 string args
-    //    do:     write nicely formatted code (ending with new line)
-    // **********************************************************************
+        generateWithComment(opcode, comment, "", "", ""); }
     public static void generate(String opcode, String arg1, String arg2,
                                 String arg3) {
-        Codegen.generate(opcode, arg1, arg2, arg3);
-    }
-
+        Codegen.generate(opcode, arg1, arg2, arg3); }
     public static void generate(String opcode, String arg1, String arg2) {
-        generate(opcode, arg1, arg2, "");
-    }
-
+        generate(opcode, arg1, arg2, ""); }
     public static void generate(String opcode, String arg1) {
-        generate(opcode, arg1, "", "");
-    }
-
+        generate(opcode, arg1, "", ""); }
     public static void generate(String opcode) {
-        generate(opcode, "", "", "");
-    }
-
-    // **********************************************************************
-    // generate (two string args, one int)
-    //    given:  op code and args
-    //    do:     write nicely formatted code (ending with new line)
-    // **********************************************************************
+        generate(opcode, "", "", ""); }
     public static void generate(String opcode, String arg1, String arg2,
                                 int arg3) {
-        Codegen.generate(opcode, arg1, arg2, arg3);
-    }
-    
-    // **********************************************************************
-    // generate (one string arg, one int)
-    //    given:  op code and args
-    //    do:     write nicely formatted code (ending with new line)
-    // **********************************************************************
+        Codegen.generate(opcode, arg1, arg2, arg3); }
     public static void generate(String opcode, String arg1, int arg2) {
-        Codegen.generate(opcode, arg1, arg2);
-    }
-    
-    // **********************************************************************
-    // generateIndexed
-    //    given:  op code, target register T1 (as string), indexed register T2
-    //            (as string), - offset xx (int), and optional comment
-    //    do:     write nicely formatted code (ending with new line):
-    //                 op T1, xx(T2) #comment
-    // **********************************************************************
+        Codegen.generate(opcode, arg1, arg2); }
     public static void generateIndexed(String opcode, String arg1, String arg2,
                                        int arg3, String comment) {
-        Codegen.generateIndexed(opcode, arg1, arg2, arg3, comment);
-    }
+        Codegen.generateIndexed(opcode, arg1, arg2, arg3, comment); }
     
     public static void generateIndexed(String opcode, String arg1, String arg2,
                                        int arg3) {
-        generateIndexed(opcode, arg1, arg2, arg3, "");
-    }
-
-    // **********************************************************************
-    // generateLabeled (string args -- perhaps empty)
-    //    given:  label, op code, comment, and arg
-    //    do:     write nicely formatted code (ending with new line)
-    // **********************************************************************
+        generateIndexed(opcode, arg1, arg2, arg3, ""); }
     public static void generateLabeled(String label, String opcode,
                                        String comment, String arg1) {
-        Codegen.generateLabeled(label, opcode, comment, arg1);
-    }
-
+        Codegen.generateLabeled(label, opcode, comment, arg1); }
     public static void generateLabeled(String label, String opcode,
                                        String comment) {
-        generateLabeled(label, opcode, comment, "");
-    }
-
-    // **********************************************************************
-    // genPush
-    //    generate code to push the given value onto the stack
-    // **********************************************************************
+        generateLabeled(label, opcode, comment, ""); }
     public static void genPush(String s) {
         generateIndexed("sw", s, SP, 0, "PUSH");
-        generate("subu", SP, SP, 4);
-    }
-
-    // **********************************************************************
-    // genPop
-    //    generate code to pop into the given register
-    // **********************************************************************
+        generate("subu", SP, SP, 4); }
     public static void genPop(String s) {
         generateIndexed("lw", s, SP, 4, "POP");
-        generate("addu", SP, SP, 4);
-    }
-
-    // **********************************************************************
-    // genLabel
-    //   given:    label L and comment (comment may be empty)
-    //   generate: L:    # comment
-    // **********************************************************************
+        generate("addu", SP, SP, 4); }
     public static void genLabel(String label, String comment) {
-        Codegen.genLabel(label, comment);
-    }
-    
+        Codegen.genLabel(label, comment); }
     public static void genLabel(String label) {
-        genLabel(label, "");
-    }
-    
-    // **********************************************************************
-    // Return a different label each time:
-    //        L0 L1 L2, etc.
-    // **********************************************************************
+        genLabel(label, ""); }
     public static String nextLabel() {
-        return Codegen.nextLabel();
-    }
+        return Codegen.nextLabel(); }
+
     /* Above Copied from CodeGen.java */
 
-
     public static void generateFuncEntry(String funcName, FnSym sym) {
-        Codegen.generateFuncEntry(funcName, sym);
-    }
-
+        Codegen.generateFuncEntry(funcName, sym); }
     public static void generateFuncExit(String funcName, FnSym sym) {
-        Codegen.generateFuncExit(funcName, sym);
-    }
+        Codegen.generateFuncExit(funcName, sym); }
     
+    public static final HashMap<String, String> strLitDict = new HashMap<>();
 
 
     // every subclass must provide an unparse operation
@@ -286,8 +194,6 @@ abstract class ASTnode {
     public void codegen(PrintWriter p) {
         p.println("#+++++ WARN:" + this.getClass().getSimpleName() + " has not implemented codegen yet");
     }
-
-
 }
 
 // **********************************************************************
@@ -418,7 +324,7 @@ class DeclListNode extends ASTnode {
     
     // if this is function body var decl list
     private boolean isFnBody = false;
-	private int offset = -1;
+	private int offset = 1;
 }
 
 class FormalsListNode extends ASTnode {
@@ -741,11 +647,8 @@ class VarDeclNode extends DeclNode {
 
     /** code generation */
     public void codegen(PrintWriter p) {
-        if(isLocal) {
-            p.println("codegen for func local varDeclNode is not implemented yet");
-            //TODO: local variable
-        }
-        else {
+        //Set label for global var
+        if(isLocal == false) {  
             p.println("\t.data");
             p.println("\t.align 2");
             p.println("_" + myId.name() + ":\t.space 4");
@@ -768,7 +671,7 @@ class VarDeclNode extends DeclNode {
     public static int NOT_STRUCT = -1;
 
     private boolean isLocal = false;
-    private int offset = -1;    //offset from $fp for this variable name
+    private int offset = 1;    //offset from $fp for this variable name
 }
 
 class FnDeclNode extends DeclNode {
@@ -1127,6 +1030,14 @@ class AssignStmtNode extends StmtNode {
     public void typeCheck(Type retType) {
         myAssign.typeCheck();
     }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        p.println("#AssignStmt Start");
+        myAssign.codegen(p);
+        genPop(T0);             //myAssign will leave the value on stack. Remove it
+        p.println("#AssignStmt End");
+    }
         
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -1314,10 +1225,14 @@ class WriteStmtNode extends StmtNode {
             generate("syscall");
         }
         else if(myExpType.isBoolType()) {
-        
+            genPop(A0);
+            generate("li", V0, 1);
+            generate("syscall");
         }
         else if(myExpType.isStringType()) {
-        
+            genPop(A0);
+            generate("li", V0, 4);
+            generate("syscall");
         }
         else {
             p.println("WARN: writestmtnode don't have codegen for type " + myExpType);
@@ -1718,6 +1633,19 @@ class StringLitNode extends ExpNode {
         return new StringType();
     }
         
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        if(strLitDict.containsKey(myStrVal) == false) {
+            p.println("\t.data");
+            String label = nextLabel();
+            generateLabeled(label, ".asciiz", "", myStrVal);
+            strLitDict.put(myStrVal, label);
+        }
+        p.println("\t.text");
+        generate("la", T0, strLitDict.get(myStrVal));
+        genPush(T0);
+    }
+
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
     }
@@ -1753,6 +1681,12 @@ class TrueNode extends ExpNode {
     public Type typeCheck() {
         return new BoolType();
     }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        generate("li", T0, 1);      //1 for true
+        genPush(T0);
+    }
         
     public void unparse(PrintWriter p, int indent) {
         p.print("true");
@@ -1787,6 +1721,12 @@ class FalseNode extends ExpNode {
      */
     public Type typeCheck() {
         return new BoolType();
+    }
+        
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        generate("li", T0, 0);      //0 for false
+        genPush(T0);
     }
         
     public void unparse(PrintWriter p, int indent) {
@@ -1871,6 +1811,38 @@ class IdNode extends ExpNode {
         }
         return null;
     }
+
+    public void genJumpAndLink(PrintWriter p) {
+
+    }
+
+    /** codegen, for expressions only */
+    public void codegen(PrintWriter p) {
+        p.println("#ID codegen Start");
+        if(isLocal) {
+            generateIndexed("lw", T0, FP, this.offset);
+            genPush(T0);
+        }
+        else {
+            generate("lw", T0, "_"+this.name());
+            genPush(T0);
+        }
+        p.println("#ID codegen End");
+    }
+
+
+    /** genAddr, for assignments only */
+    public void genAddr(PrintWriter p) {
+        if(isLocal) {
+            generateIndexed("la", T0, FP, this.offset);
+            genPush(T0);
+        }
+        else {
+            generate("la", T0, "_"+this.name());
+            genPush(T0);
+        }
+    }
+
            
     public void unparse(PrintWriter p, int indent) {
         p.print(myStrVal);
@@ -1887,7 +1859,7 @@ class IdNode extends ExpNode {
     private SemSym mySym;
 
     private boolean isLocal = false;//is function local variable
-    private int offset = -1;        //offset from function AR
+    private int offset = 1;        //offset from function AR
 }
 
 class DotAccessExpNode extends ExpNode {
@@ -2100,6 +2072,18 @@ class AssignNode extends ExpNode {
         }
         
         return retType;
+    }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        p.println("#Assign exp Start");
+        myExp.codegen(p);
+        ((IdNode)myLhs).genAddr(p);
+        genPop(T1);         //Get lhs address
+        genPop(T0);         //Get rhs value (note the order)
+        generateIndexed("sw", T0, T1, 0);
+        genPush(T0);
+        p.println("#Assign exp End");
     }
     
     public void unparse(PrintWriter p, int indent) {

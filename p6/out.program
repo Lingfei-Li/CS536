@@ -5,41 +5,101 @@ _g1:	.space 4
 	.align 2
 _g2:	.space 4
 	.text
-_func:
-	sw    $ra, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	sw    $fp, 0($sp)	#PUSH
-	subu  $sp, $sp, 4
-	addu  $fp, $sp, 36	#Set FP
-	subu  $sp, $sp, 16	#space for local var
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-#+++++ WARN:ReturnStmtNode has not implemented codegen yet
-_funcRet:
-	lw    $ra, -12($fp)	#Restore RA
-	move  $t0, $fp		#Save callee's fp
-	lw    $fp, -16($fp)	#Restore caller's FP
-	move  $sp, $t0		#Restore caller's SP
-	jr    $ra		#Return
-	.text
 	.globl main
 main:
 	sw    $ra, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
 	sw    $fp, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
-	addu  $fp, $sp, 8	#Set FP
-	subu  $sp, $sp, 0	#space for local var
-#Write Stmt Begins. Evaluate Exp:
-	li    $t0, 1
+	addu  $fp, $sp, 16	#Set FP
+	subu  $sp, $sp, 4	#space for local var
+#AssignStmt Start
+#Assign exp Start
+	li    $t0, 11
 	sw    $t0, 0($sp)	#PUSH
 	subu  $sp, $sp, 4
+	la    $t0, -16($fp)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	sw    $t0, 0($t1)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+#Assign exp End
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+#AssignStmt End
+#Write Stmt Begins. Evaluate Exp:
+#ID codegen Start
+	lw    $t0, -16($fp)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+#ID codegen End
+#Put value to register and syscall
+	lw    $a0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	li    $v0, 1
+	syscall
+#Write Stmt Over.
+#AssignStmt Start
+#Assign exp Start
+	li    $t0, 22
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	la    $t0, 0($fp)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	sw    $t0, 0($t1)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+#Assign exp End
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+#AssignStmt End
+#Write Stmt Begins. Evaluate Exp:
+#ID codegen Start
+	lw    $t0, 0($fp)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+#ID codegen End
+#Put value to register and syscall
+	lw    $a0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	li    $v0, 1
+	syscall
+#Write Stmt Over.
+#AssignStmt Start
+#Assign exp Start
+	li    $t0, 33
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	la    $t0, -4($fp)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+	lw    $t1, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+	sw    $t0, 0($t1)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+#Assign exp End
+	lw    $t0, 4($sp)	#POP
+	addu  $sp, $sp, 4
+#AssignStmt End
+#Write Stmt Begins. Evaluate Exp:
+#ID codegen Start
+	lw    $t0, -4($fp)
+	sw    $t0, 0($sp)	#PUSH
+	subu  $sp, $sp, 4
+#ID codegen End
 #Put value to register and syscall
 	lw    $a0, 4($sp)	#POP
 	addu  $sp, $sp, 4
@@ -47,8 +107,8 @@ main:
 	syscall
 #Write Stmt Over.
 _mainRet:
-	lw    $ra, 0($fp)	#Restore RA
+	lw    $ra, -8($fp)	#Restore RA
 	move  $t0, $fp		#Save callee's fp
-	lw    $fp, -4($fp)	#Restore caller's FP
+	lw    $fp, -12($fp)	#Restore caller's FP
 	move  $sp, $t0		#Restore caller's SP
 	jr    $ra		#Return

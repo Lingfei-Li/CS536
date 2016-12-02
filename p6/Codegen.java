@@ -72,9 +72,8 @@ public class Codegen {
         }
         genPush("$ra");
         genPush("$fp");
-        int fpDistSp = sym.getLocalVarSize()+sym.getParamSize()+8;
         generateWithComment("addu", "Set FP", 
-                FP, SP, fpDistSp); 
+                FP, SP, sym.getParamSize()+8); 
         generateWithComment("subu", "space for local var", 
                 SP, SP, sym.getLocalVarSize()); 
 
