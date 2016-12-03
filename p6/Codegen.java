@@ -53,7 +53,20 @@ public class Codegen {
     // GENERATE OPERATIONS
     // **********************************************************************
     // **********************************************************************
-    //
+
+    // @Lingfei
+    // **********************************************************************
+    // generateFuncEntry
+    //    given:  function name, function symbol
+    //    do:     push return add, push control link, set FP, space for var
+    // **********************************************************************
+    public static void genSyscall(int syscallNum) {
+        generate("li", V0, syscallNum);
+        generate("syscall");
+    }
+    
+
+
 
     // @Lingfei
     // **********************************************************************

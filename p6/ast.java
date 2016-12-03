@@ -179,6 +179,9 @@ abstract class ASTnode {
         Codegen.generateFuncEntry(funcName, sym); }
     public static void generateFuncExit(String funcName, FnSym sym) {
         Codegen.generateFuncExit(funcName, sym); }
+    public static void genSyscall(int syscallNum) {
+        Codegen.genSyscall(syscallNum); }
+
     
     public static final HashMap<String, String> strLitDict = new HashMap<>();
 
@@ -411,12 +414,20 @@ class FnBodyNode extends ASTnode {
     /** code generation */
     public void codegen(PrintWriter p) {
         //decl list doesn't need to gen code
+        myStmtList.setFuncName(funcName);
         myStmtList.codegen(p);
+
+        //Hidden Return
+        generate("j", "_"+this.funcName+"Ret");
     }
 
     public void unparse(PrintWriter p, int indent) {
         myDeclList.unparse(p, indent);
         myStmtList.unparse(p, indent);
+    }
+
+    public void setFuncName(String s) {
+        this.funcName = s;
     }
 
 	
@@ -426,6 +437,7 @@ class FnBodyNode extends ASTnode {
 	
 	// offset to start with. Includes params + 8bytes for control link and return addr
 	private int offset = 0;
+    private String funcName = "";
 }
 
 class StmtListNode extends ASTnode {
@@ -455,6 +467,10 @@ class StmtListNode extends ASTnode {
     /** code generation */
     public void codegen(PrintWriter p) {
         for(StmtNode s : myStmts) {
+            if(s instanceof ReturnStmtNode) {
+                //set func name for return statement
+                ((ReturnStmtNode)s).setFuncName(funcName);
+            }
             s.codegen(p);
         }
     }
@@ -466,8 +482,14 @@ class StmtListNode extends ASTnode {
         }
     }
 
+    public void setFuncName(String s) {
+        this.funcName = s;
+    }
+
     // list of kids (StmtNodes)
     private List<StmtNode> myStmts;
+
+    private String funcName = "";
 }
 
 class ExpListNode extends ASTnode {
@@ -761,6 +783,7 @@ class FnDeclNode extends DeclNode {
     /** code generation */
     public void codegen(PrintWriter p) {
         generateFuncEntry(myId.name(), (FnSym)(myId.sym()));
+        myBody.setFuncName(myId.name());
         myBody.codegen(p);
         generateFuncExit(myId.name(), (FnSym)(myId.sym()));
     }
@@ -1074,6 +1097,23 @@ class PostIncStmtNode extends StmtNode {
         }
     }
         
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        if(myExp instanceof IdNode) {
+            p.println("#Post++ Start");
+            ((IdNode)myExp).genAddr(p);
+            genPop(T0);     //T0 holds address
+            generateIndexed("lw", T1, T0, 0);   //load value from address
+            generate("add", T1, T1, 1);
+            generateIndexed("sw", T1, T0, 0);   //load value from address
+            p.println("#Post++ End");
+        }
+        else {
+            //DotAccessNode
+            p.println("#+++++No post++ support for dotAccess");
+        }
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         myExp.unparse(p, 0);
@@ -1109,6 +1149,23 @@ class PostDecStmtNode extends StmtNode {
         }
     }
         
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        if(myExp instanceof IdNode) {
+            p.println("#Post-- Start");
+            ((IdNode)myExp).genAddr(p);
+            genPop(T0);     //T0 holds address
+            generateIndexed("lw", T1, T0, 0);   //load value from address
+            generate("sub", T1, T1, 1);
+            generateIndexed("sw", T1, T0, 0);   //load value from address
+            p.println("#Post-- End");
+        }
+        else {
+            //DotAccessNode
+            p.println("#+++++No post++ support for dotAccess");
+        }
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         myExp.unparse(p, 0);
@@ -1151,6 +1208,20 @@ class ReadStmtNode extends StmtNode {
         if (type.isStructType()) {
             ErrMsg.fatal(myExp.lineNum(), myExp.charNum(),
                          "Attempt to read a struct variable");
+        }
+    }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        if (myExp instanceof IdNode) {
+            genSyscall(5);
+            ((IdNode)myExp).genAddr(p);
+            genPop(T0);
+            generateIndexed("sw", V0, T0, 0);
+        }
+        else {
+            //DotAccessNode
+            p.println("#+++++No post-- support for dotAccess");
         }
     }
     
@@ -1221,18 +1292,15 @@ class WriteStmtNode extends StmtNode {
         p.println("#Put value to register and syscall");
         if(myExpType.isIntType()) {
             genPop(A0);
-            generate("li", V0, 1);
-            generate("syscall");
+            genSyscall(1);
         }
         else if(myExpType.isBoolType()) {
             genPop(A0);
-            generate("li", V0, 1);
-            generate("syscall");
+            genSyscall(1);
         }
         else if(myExpType.isStringType()) {
             genPop(A0);
-            generate("li", V0, 4);
-            generate("syscall");
+            genSyscall(4);
         }
         else {
             p.println("WARN: writestmtnode don't have codegen for type " + myExpType);
@@ -1296,6 +1364,21 @@ class IfStmtNode extends StmtNode {
         
         myStmtList.typeCheck(retType);
     }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        String endLabel = nextLabel();
+
+        myExp.codegen(p);
+        genPop(T0);
+        generate("bne", T0, "1", endLabel);
+        //If true, fall through
+        myStmtList.codegen(p);
+        //Else, skip
+        genLabel(endLabel);
+        generate("nop");
+    }
+    
        
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -1374,6 +1457,24 @@ class IfElseStmtNode extends StmtNode {
         myThenStmtList.typeCheck(retType);
         myElseStmtList.typeCheck(retType);
     }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        String elseLabel = nextLabel();
+        String endLabel = nextLabel();
+
+        myExp.codegen(p);
+        genPop(T0);
+        generate("bne", T0, "1", elseLabel);
+        //If true
+        myThenStmtList.codegen(p);
+        generate("b", endLabel);
+        //Else
+        genLabel(elseLabel);
+        myElseStmtList.codegen(p);
+        genLabel(endLabel);
+        generate("nop");
+    }
         
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -1442,6 +1543,26 @@ class WhileStmtNode extends StmtNode {
         
         myStmtList.typeCheck(retType);
     }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        String startLabel = nextLabel();
+        String endLabel = nextLabel();
+
+        genLabel(startLabel);
+        generate("nop");
+
+        myExp.codegen(p);
+        genPop(T0);
+        generate("bne", T0, "1", endLabel);
+        //Condition true
+        myStmtList.codegen(p);
+        generate("b", startLabel);
+
+        //break
+        genLabel(endLabel);
+        generate("nop");
+    }
         
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -1478,6 +1599,12 @@ class CallStmtNode extends StmtNode {
      */
     public void typeCheck(Type retType) {
         myCall.typeCheck();
+    }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        myCall.codegen(p);
+        genPop(T0);
     }
     
     public void unparse(PrintWriter p, int indent) {
@@ -1532,6 +1659,15 @@ class ReturnStmtNode extends StmtNode {
         
     }
     
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        if(myExp != null) {
+            myExp.codegen(p);
+            genPop(V0);
+        }
+        generate("j", "_"+this.funcName+"Ret");
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         p.print("return");
@@ -1542,8 +1678,14 @@ class ReturnStmtNode extends StmtNode {
         p.println(";");
     }
 
+    public void setFuncName(String s) {
+        this.funcName = s;
+    }
+
     // 1 kid
     private ExpNode myExp; // possibly null
+
+    private String funcName = "";
 }
 
 // **********************************************************************
@@ -1812,11 +1954,12 @@ class IdNode extends ExpNode {
         return null;
     }
 
+    /** codegen, for func calls */
     public void genJumpAndLink(PrintWriter p) {
-
+        generate("jal", "_"+this.name());
     }
 
-    /** codegen, for expressions only */
+    /** codegen, for expressions */
     public void codegen(PrintWriter p) {
         p.println("#ID codegen Start");
         if(isLocal) {
@@ -1831,7 +1974,7 @@ class IdNode extends ExpNode {
     }
 
 
-    /** genAddr, for assignments only */
+    /** genAddr, for assignments */
     public void genAddr(PrintWriter p) {
         if(isLocal) {
             generateIndexed("la", T0, FP, this.offset);
@@ -2162,6 +2305,13 @@ class CallExpNode extends ExpNode {
         myExpList.typeCheck(fnSym.getParamTypes());
         return fnSym.getReturnType();
     }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        myExpList.codegen(p);   //evaluate params. pushed to stack
+        myId.genJumpAndLink(p); //call func
+        genPush(V0);            //push return value to stack
+    }
         
     // ** unparse **
     public void unparse(PrintWriter p, int indent) {
@@ -2242,6 +2392,21 @@ abstract class BinaryExpNode extends ExpNode {
         myExp1.nameAnalysis(symTab);
         myExp2.nameAnalysis(symTab);
     }
+
+    /** codegen for Non Short-Circuited Operations
+     *  (LogicalExpNode for short-circuited) */
+    public void codegen(PrintWriter p) {
+        p.println("#Binary Exp Start");
+        myExp1.codegen(p);
+        myExp2.codegen(p);
+        genPop(T1);     //2nd param
+        genPop(T0);     //1st param
+        String resReg = genOp(p);
+        genPush(resReg);
+        p.println("#Binary Exp End");
+    }
+
+    abstract protected String genOp(PrintWriter p);
     
     // two kids
     protected ExpNode myExp1;
@@ -2277,6 +2442,14 @@ class UnaryMinusNode extends UnaryExpNode {
         return retType;
     }
 
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        myExp.codegen(p);
+        genPop(T0);
+        generate("sub", T0, "$zero", T0);
+        genPush(T0);
+    }
+
     public void unparse(PrintWriter p, int indent) {
         p.print("(-");
         myExp.unparse(p, 0);
@@ -2307,6 +2480,14 @@ class NotNode extends UnaryExpNode {
         }
         
         return retType;
+    }
+
+    /** codegen */
+    public void codegen(PrintWriter p) {
+        myExp.codegen(p);
+        genPop(T0);
+        generate("seq", T0, T0, "0");
+        genPush(T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2384,6 +2565,11 @@ abstract class LogicalExpNode extends BinaryExpNode {
         
         return retType;
     }
+
+    abstract public void codegen(PrintWriter p);
+
+    //not necessary for short-circuited exp
+    protected String genOp(PrintWriter p) { return ""; }
 }
 
 abstract class EqualityExpNode extends BinaryExpNode {
@@ -2482,6 +2668,11 @@ class PlusNode extends ArithmeticExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    protected String genOp(PrintWriter p) {
+        generate("add", T0, T0, T1);
+        return T0;
+    }
 }
 
 class MinusNode extends ArithmeticExpNode {
@@ -2495,6 +2686,11 @@ class MinusNode extends ArithmeticExpNode {
         p.print(" - ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    protected String genOp(PrintWriter p) {
+        generate("sub", T0, T0, T1);
+        return T0;
     }
 }
 
@@ -2511,6 +2707,12 @@ class TimesNode extends ArithmeticExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    protected String genOp(PrintWriter p) {
+        generate("mult", T0, T1);
+        generate("mflo", T0);
+        return T0;
+    }
 }
 
 class DivideNode extends ArithmeticExpNode {
@@ -2524,6 +2726,12 @@ class DivideNode extends ArithmeticExpNode {
         p.print(" / ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    protected String genOp(PrintWriter p) {
+        generate("div", T0, T1);
+        generate("mflo", T0);
+        return T0;
     }
 }
 
@@ -2539,6 +2747,36 @@ class AndNode extends LogicalExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    /** codegen for Non Short-Circuited Operations
+     *  (LogicalExpNode for short-circuited) */
+    public void codegen(PrintWriter p) {
+        p.println("#AND Exp Start");
+
+        String falseLabel = nextLabel();
+        String endLabel = nextLabel();
+
+        myExp1.codegen(p);
+        genPop(T0);     //1st param
+        generate("beq", T0, "0", falseLabel);   //lhs fails
+
+        myExp2.codegen(p);
+        genPop(T0);     //2nd param
+        generate("beq", T0, "0", falseLabel);   //rhs fails
+
+        //condition true:
+        generate("li", T0, 1);
+        genPush(T0);
+        generate("b", endLabel);
+
+        //condition false:
+        genLabel(falseLabel);
+        generate("li", T0, 0);
+        genPush(T0);
+
+        genLabel(endLabel);
+        p.println("#AND Exp End");
+    }
 }
 
 class OrNode extends LogicalExpNode {
@@ -2552,6 +2790,36 @@ class OrNode extends LogicalExpNode {
         p.print(" || ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    /** codegen for Non Short-Circuited Operations
+     *  (LogicalExpNode for short-circuited) */
+    public void codegen(PrintWriter p) {
+        p.println("#OR Exp Start");
+
+        String trueLabel = nextLabel();
+        String endLabel = nextLabel();
+
+        myExp1.codegen(p);
+        genPop(T0);     //1st param
+        generate("beq", T0, "1", trueLabel);   //lhs succeeds
+
+        myExp2.codegen(p);
+        genPop(T0);     //2nd param
+        generate("beq", T0, "1", trueLabel);   //rhs succeeds
+
+        //condition false:
+        generate("li", T0, 0);
+        genPush(T0);
+        generate("b", endLabel);
+
+        //condition true:
+        genLabel(trueLabel);
+        generate("li", T0, 1);
+        genPush(T0);
+
+        genLabel(endLabel);
+        p.println("#OR Exp End");
     }
 }
 
@@ -2567,6 +2835,18 @@ class EqualsNode extends EqualityExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    protected String genOp(PrintWriter p) {
+        String trueLabel = nextLabel();
+        String falseLabel = nextLabel();
+        generate("beq", T0, T1, trueLabel);
+        generate("li", T0, 0);      //Not Equals
+        generate("b", falseLabel);
+        genLabel(trueLabel);            //Equals
+        generate("li", T0, 1);
+        genLabel(falseLabel);
+        return T0;
+    }
 }
 
 class NotEqualsNode extends EqualityExpNode {
@@ -2580,6 +2860,18 @@ class NotEqualsNode extends EqualityExpNode {
         p.print(" != ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    protected String genOp(PrintWriter p) {
+        String trueLabel = nextLabel();
+        String falseLabel = nextLabel();
+        generate("bne", T0, T1, trueLabel);
+        generate("li", T0, 0);          //Condition false
+        generate("b", falseLabel);
+        genLabel(trueLabel);            //Condition true
+        generate("li", T0, 1);
+        genLabel(falseLabel);           //End of exp
+        return T0;
     }
 }
 
@@ -2595,6 +2887,19 @@ class LessNode extends RelationalExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    protected String genOp(PrintWriter p) {
+        String trueLabel = nextLabel();
+        String falseLabel = nextLabel();
+        generate("slt", T0, T0, T1);
+        generate("beq", T0, "1", trueLabel);
+        generate("li", T0, 0);          //Condition false
+        generate("b", falseLabel);
+        genLabel(trueLabel);            //Condition true
+        generate("li", T0, 1);
+        genLabel(falseLabel);
+        return T0;
+    }
 }
 
 class GreaterNode extends RelationalExpNode {
@@ -2608,6 +2913,19 @@ class GreaterNode extends RelationalExpNode {
         p.print(" > ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    protected String genOp(PrintWriter p) {
+        String trueLabel = nextLabel();
+        String falseLabel = nextLabel();
+        generate("slt", T0, T1, T0);    //Swap T0 and T1 from LessNode
+        generate("beq", T0, "1", trueLabel);
+        generate("li", T0, 0);          //Condition false
+        generate("b", falseLabel);
+        genLabel(trueLabel);            //Condition true
+        generate("li", T0, 1);
+        genLabel(falseLabel);
+        return T0;
     }
 }
 
@@ -2623,6 +2941,21 @@ class LessEqNode extends RelationalExpNode {
         myExp2.unparse(p, 0);
         p.print(")");
     }
+
+    protected String genOp(PrintWriter p) {
+        String trueLabel = nextLabel();
+        String falseLabel = nextLabel();
+        generate("beq", T0, T1, trueLabel);
+        //Not Equals, check less than
+        generate("slt", T0, T0, T1);
+        generate("beq", T0, "1", trueLabel);
+        generate("b", falseLabel);
+        //Equals or less than, condition true
+        genLabel(trueLabel);
+        generate("li", T0, 1);
+        genLabel(falseLabel);
+        return T0;
+    }
 }
 
 class GreaterEqNode extends RelationalExpNode {
@@ -2636,5 +2969,20 @@ class GreaterEqNode extends RelationalExpNode {
         p.print(" >= ");
         myExp2.unparse(p, 0);
         p.print(")");
+    }
+
+    protected String genOp(PrintWriter p) {
+        String trueLabel = nextLabel();
+        String falseLabel = nextLabel();
+        generate("beq", T0, T1, trueLabel);
+        //Not Equals, check less than
+        generate("slt", T0, T1, T0);    //swap T0 and T1
+        generate("beq", T0, "1", trueLabel);
+        generate("b", falseLabel);
+        //Equals or less than, condition true
+        genLabel(trueLabel);
+        generate("li", T0, 1);
+        genLabel(falseLabel);
+        return T0;
     }
 }
