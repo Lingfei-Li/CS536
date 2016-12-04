@@ -174,11 +174,6 @@ abstract class ASTnode {
         return Codegen.nextLabel(); }
 
     /* Above Copied from CodeGen.java */
-
-    public static void generateFuncEntry(String funcName, FnSym sym) {
-        Codegen.generateFuncEntry(funcName, sym); }
-    public static void generateFuncExit(String funcName, FnSym sym) {
-        Codegen.generateFuncExit(funcName, sym); }
     public static void genSyscall(int syscallNum) {
         Codegen.genSyscall(syscallNum); }
 
@@ -782,10 +777,10 @@ class FnDeclNode extends DeclNode {
 
     /** code generation */
     public void codegen(PrintWriter p) {
-        generateFuncEntry(myId.name(), (FnSym)(myId.sym()));
+        Codegen.generateFuncEntry(myId.name(), (FnSym)(myId.sym()));
         myBody.setFuncName(myId.name());
         myBody.codegen(p);
-        generateFuncExit(myId.name(), (FnSym)(myId.sym()));
+        Codegen.generateFuncExit(myId.name(), (FnSym)(myId.sym()));
     }
 
         
