@@ -1102,7 +1102,7 @@ class PostIncStmtNode extends StmtNode {
             genPop(T0);     //T0 holds address
             generateIndexed("lw", T1, T0, 0);   //load value from address
             generate("add", T1, T1, 1);
-            generateIndexed("sw", T1, T0, 0);   //load value from address
+            generateIndexed("sw", T1, T0, 0);   //save value from address
             p.println("#Post++ End");
         }
         else {
