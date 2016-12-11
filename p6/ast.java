@@ -1889,7 +1889,7 @@ class IdNode extends ExpNode {
      */
     public void link(SemSym sym) {
         mySym = sym;
-        if(mySym.getOffset() != -1) {
+        if(mySym.getOffset() <= 0) {
             this.isLocal = true;
             this.offset = mySym.getOffset();
         }
@@ -1974,11 +1974,13 @@ class IdNode extends ExpNode {
 
     /** genAddr, for assignments */
     public void genAddr(PrintWriter p) {
-        if(isLocal) {
+        if(isLocal && offset <= 0) {
+            generate("#local variable");
             generateIndexed("la", T0, FP, this.offset);
             genPush(T0);
         }
         else {
+            generate("#global variable");
             generate("la", T0, "_"+this.name());
             genPush(T0);
         }
