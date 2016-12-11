@@ -462,10 +462,7 @@ class StmtListNode extends ASTnode {
     /** code generation */
     public void codegen(PrintWriter p) {
         for(StmtNode s : myStmts) {
-            if(s instanceof ReturnStmtNode) {
-                //set func name for return statement
-                ((ReturnStmtNode)s).setFuncName(funcName);
-            }
+            s.setFuncName(funcName);
             s.codegen(p);
         }
     }
@@ -1027,6 +1024,11 @@ class StructNode extends TypeNode {
 abstract class StmtNode extends ASTnode {
     abstract public void nameAnalysis(SymTable symTab);
     abstract public void typeCheck(Type retType);
+
+    public void setFuncName(String str) {
+        funcName = str;
+    }
+    protected String funcName = "NULLFUNC";
 }
 
 class AssignStmtNode extends StmtNode {
@@ -1368,6 +1370,7 @@ class IfStmtNode extends StmtNode {
         genPop(T0);
         generate("bne", T0, "1", endLabel);
         //If true, fall through
+        myStmtList.setFuncName(funcName);
         myStmtList.codegen(p);
         //Else, skip
         genLabel(endLabel);
@@ -1418,6 +1421,7 @@ class IfElseStmtNode extends StmtNode {
         myExp.nameAnalysis(symTab);
         symTab.addScope();
         myThenDeclList.nameAnalysis(symTab);
+        myThenStmtList.setFuncName(funcName);
         myThenStmtList.nameAnalysis(symTab);
         try {
             symTab.removeScope();
@@ -1428,6 +1432,7 @@ class IfElseStmtNode extends StmtNode {
         }
         symTab.addScope();
         myElseDeclList.nameAnalysis(symTab);
+        myElseStmtList.setFuncName(funcName);
         myElseStmtList.nameAnalysis(symTab);
         try {
             symTab.removeScope();
@@ -1462,10 +1467,12 @@ class IfElseStmtNode extends StmtNode {
         genPop(T0);
         generate("bne", T0, "1", elseLabel);
         //If true
+        myThenStmtList.setFuncName(funcName);
         myThenStmtList.codegen(p);
         generate("b", endLabel);
         //Else
         genLabel(elseLabel);
+        myElseStmtList.setFuncName(funcName);
         myElseStmtList.codegen(p);
         genLabel(endLabel);
         generate("nop");
@@ -1551,6 +1558,8 @@ class WhileStmtNode extends StmtNode {
         genPop(T0);
         generate("bne", T0, "1", endLabel);
         //Condition true
+
+        myStmtList.setFuncName(funcName);
         myStmtList.codegen(p);
         generate("b", startLabel);
 
@@ -1673,14 +1682,8 @@ class ReturnStmtNode extends StmtNode {
         p.println(";");
     }
 
-    public void setFuncName(String s) {
-        this.funcName = s;
-    }
-
     // 1 kid
     private ExpNode myExp; // possibly null
-
-    private String funcName = "";
 }
 
 // **********************************************************************

@@ -3,14 +3,30 @@
 int g1;
 int g2;
 
+//int f(int a) {
+  //  if(a==1){
+  //      cout<<"a==1\n";
+  //      return 0;
+  //  }
+  //  else {
+  //      cout<<"a==1\n";
+  //      return 1;
+  //  }
+//}
+
+int func(int a) {
+    if(true) {
+        return 1;
+    }
+    else {
+return 2;
+
+    }
+}
+
 
 void main() {
-    int a;
-    a = 0;
-    while(a<10) {
-        cout<<a;
-        a ++;
-    }
+    cout<<func(1);
 }
 
 
